@@ -664,6 +664,7 @@
             document.getElementById('yt-channels-view').classList.remove('hidden');
             document.getElementById('yt-videos-view').classList.add('hidden');
             document.getElementById('yt-player-view').classList.add('hidden');
+            document.getElementById('yt-back-btn').classList.add('hidden');
             document.getElementById('yt-header-title').innerText = 'Choose a Channel';
             const grid = document.getElementById('yt-channel-grid');
             grid.innerHTML = '';
@@ -693,6 +694,7 @@
             document.getElementById('yt-channels-view').classList.add('hidden');
             document.getElementById('yt-videos-view').classList.remove('hidden');
             document.getElementById('yt-player-view').classList.add('hidden');
+            document.getElementById('yt-back-btn').classList.remove('hidden');
             document.getElementById('yt-header-title').innerText = channel.name;
             const grid = document.getElementById('yt-video-grid');
             grid.innerHTML = '<p style="padding:2rem; color:#666;">Loading videos...</p>';
