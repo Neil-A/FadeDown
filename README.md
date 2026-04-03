@@ -2,7 +2,7 @@
 
 A browser-based screen time manager for young kids. No app install, no account, no server — just open the page and go.
 
-**Live app**: https://neil-a.github.io/fadedown/fadedown.html
+**Live app**: https://neil-a.github.io/FadeDown/fadedown.html
 
 ---
 
