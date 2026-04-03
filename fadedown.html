@@ -757,7 +757,8 @@
             document.getElementById('yt-player-error').classList.add('hidden');
             document.getElementById('yt-frame').classList.remove('hidden');
             const listParam = playlistId ? `&list=${playlistId}` : '';
-            document.getElementById('yt-frame').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&playsinline=1&iv_load_policy=3&controls=1&enablejsapi=1${listParam}`;
+            const origin = encodeURIComponent(window.location.origin);
+            document.getElementById('yt-frame').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&playsinline=1&iv_load_policy=3&controls=1&enablejsapi=1&origin=${origin}${listParam}`;
         }
 
         function closeYoutubePlayer() {
