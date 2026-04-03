@@ -376,9 +376,9 @@
 
         const DEFAULT_APPS = [
             { id: 'scratch', name: 'Scratch', url: 'https://scratch.mit.edu/projects/31876/embed', icon: '🐱', visible: true, default: true },
-            { id: 'chess', name: 'Chess', url: 'https://lichess.org/?embed', icon: '♟️', visible: true, default: true },
-            { id: '2048', name: '2048', url: 'https://play2048.co/', icon: '🔢', visible: true, default: true },
-            { id: 'draw', name: 'Drawing', url: 'https://awwapp.com/lite/', icon: '🎨', visible: true, default: true },
+            { id: 'chess', name: 'Chess', url: 'https://www.chess.com/play/computer?embed=1', icon: '♟️', visible: true, default: true },
+            { id: '2048', name: '2048', url: 'https://gabrielecirulli.github.io/2048/', icon: '🔢', visible: true, default: true },
+            { id: 'draw', name: 'Drawing', url: 'https://sketchpad.app/en/', icon: '🎨', visible: true, default: true },
             { id: 'yt', name: 'YouTube', url: 'youtube', icon: '📺', visible: true, default: true, type: 'youtube' }
         ];
 
@@ -480,6 +480,11 @@
                     // Migrate yt app to use new YouTube player
                     const ytApp = config.apps.find(a => a.id === 'yt');
                     if (ytApp) { ytApp.type = 'youtube'; ytApp.url = 'youtube'; ytApp.name = 'YouTube'; }
+                    // Keep default app URLs in sync with latest values
+                    DEFAULT_APPS.forEach(da => {
+                        const existing = config.apps.find(a => a.id === da.id);
+                        if (existing && existing.default) existing.url = da.url;
+                    });
                     // Add new config fields if missing
                     if (config.youtubeApiKey === undefined) config.youtubeApiKey = '';
                     if (!config.youtubeChannels) config.youtubeChannels = [];
