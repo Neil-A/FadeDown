@@ -519,7 +519,12 @@
                 sessionStart = Date.now();
                 sessionStorage.setItem('fadedown_session_start', sessionStart.toString());
             }
-            sessionEndTime = sessionStart + (config.sessionMins * 60000);
+            const storedEnd = sessionStorage.getItem('fadedown_session_end');
+            if (storedEnd) {
+                sessionEndTime = parseInt(storedEnd, 10);
+            } else {
+                sessionEndTime = sessionStart + (config.sessionMins * 60000);
+            }
         }
 
         function startSession() {
@@ -1254,20 +1259,23 @@
             // Active Session Controls
             document.getElementById('btn-add-time').addEventListener('click', () => {
                 sessionEndTime += 15 * 60000;
-                updateClocks();
+                sessionStorage.setItem('fadedown_session_start', sessionStart.toString());
+                sessionStorage.setItem('fadedown_session_end', sessionEndTime.toString());
+                hideOverlay();
                 updateFade();
-                alert("15 minutes added!");
+                updateClocks();
             });
             document.getElementById('btn-reset-color').addEventListener('click', () => {
                 currentSat = 1.0;
                 elAppContainer.style.filter = `saturate(1.0)`;
-                // To maintain full color, we'd need to push fadeStart forward
                 const now = Date.now();
-                sessionStart = now; // reset session start
+                sessionStart = now;
                 sessionEndTime = now + (config.sessionMins * 60000);
                 sessionStorage.setItem('fadedown_session_start', sessionStart.toString());
+                sessionStorage.setItem('fadedown_session_end', sessionEndTime.toString());
+                hideOverlay();
                 updateFade();
-                alert("Color and session reset!");
+                updateClocks();
             });
             document.getElementById('btn-end-session').addEventListener('click', () => {
                 sessionEndTime = Date.now() - 1000;
