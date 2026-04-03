@@ -21,9 +21,9 @@
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
         body { font-family: var(--font-main); background: var(--bg-color); color: var(--text-color); overflow: hidden; touch-action: pan-y; }
-        
+
         .hidden { display: none !important; }
-        
+
         #app-container {
             width: 100vw;
             height: 100vh;
@@ -31,40 +31,67 @@
             flex-direction: column;
             transition: filter 60s linear;
         }
-        
+
         /* Child View */
-        #child-view { flex: 1; display: flex; flex-direction: column; padding: 2rem; position: relative; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-        .clock { font-size: 3.5rem; font-weight: 900; color: #555; }
-        .session-timer { font-size: 1.8rem; font-weight: 700; color: #777; background: rgba(255,255,255,0.7); padding: 0.5rem 1.5rem; border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        
-        .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; width: 100%; max-width: 1200px; margin: 0 auto; padding-top: 1rem; overflow-y: auto; }
+        #child-view { flex: 1; display: flex; flex-direction: column; padding: 1rem 1.2rem; position: relative; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
+        .clock { font-size: 2rem; font-weight: 900; color: #555; }
+        .session-timer { font-size: 1rem; font-weight: 700; color: #777; }
+
+        /* Child view no-api message */
+        #child-no-api {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            gap: 1.5rem;
+        }
+        #child-no-api p {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #777;
+            line-height: 1.5;
+        }
+        #btn-watch-yt {
+            font-size: 1.5rem;
+            padding: 1.2rem 3rem;
+            border-radius: 24px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(74,144,226,0.3);
+        }
+        #btn-watch-yt:active { transform: scale(0.96); }
+
         .app-tile { background: var(--tile-bg); border-radius: 32px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px var(--tile-shadow); transition: transform 0.2s, box-shadow 0.2s; min-height: 200px; }
         .app-tile:active { transform: scale(0.96); box-shadow: 0 5px 15px var(--tile-shadow); }
         .app-icon { font-size: 5rem; margin-bottom: 1.5rem; }
         .app-name { font-size: 1.5rem; font-weight: 800; text-align: center; color: #444; }
-        
-        /* Iframe Container */
-        #iframe-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #fff; z-index: 100; display: flex; flex-direction: column; }
-        .iframe-header { display: flex; padding: 1rem 2rem; background: #f8f9fa; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
+
+        /* Back button */
         .back-btn { font-size: 1.2rem; font-weight: 800; padding: 1rem 2rem; border-radius: 50px; border: none; background: var(--accent); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(74,144,226,0.3); }
         .back-btn:active { transform: scale(0.95); }
-        #app-frame { flex: 1; border: none; width: 100%; height: 100%; }
-        
+        .iframe-header { display: flex; padding: 1rem 2rem; background: #f8f9fa; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
+
         /* Lock Screen */
         #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; }
         .lock-icon { font-size: 8rem; margin-bottom: 2rem; }
         .lock-msg { font-size: 3rem; font-weight: 900; color: #555; margin-bottom: 1rem; }
         .lock-sub { font-size: 1.8rem; color: #777; font-weight: 700; }
-        
+
         /* Parent Trigger */
         #parent-trigger { position: absolute; top: 0; right: 0; width: 120px; height: 120px; z-index: 250; cursor: pointer; pointer-events: auto; }
-        
+
         /* Overlay & Panels */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 300; display: flex; justify-content: center; align-items: center; padding: 2rem; user-select: auto; -webkit-user-select: auto; }
-        .panel { background: #fff; border-radius: 24px; width: 100%; max-width: 650px; padding: 2.5rem; display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 300; display: flex; justify-content: center; align-items: center; padding: 1rem; user-select: auto; -webkit-user-select: auto; }
+        .panel { background: #fff; border-radius: 24px; width: 100%; max-width: 650px; padding: 1.5rem; display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; }
         .panel-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2.5rem; cursor: pointer; border: none; background: none; color: #aaa; line-height: 1; }
-        
+
         /* Forms */
         h2 { margin-bottom: 1.5rem; font-size: 2rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; color: #333; }
         h3 { margin: 2rem 0 1rem; font-size: 1.4rem; color: #444; }
@@ -72,16 +99,16 @@
         label { display: block; font-weight: 800; margin-bottom: 0.5rem; color: #555; }
         input[type="number"], input[type="text"], input[type="time"], input[type="password"], select, textarea { width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; font-family: var(--font-main); font-size: 1.1rem; }
         input[type="range"] { width: 100%; margin: 1rem 0; }
-        
+
         button { padding: 1rem 2rem; border: none; border-radius: 12px; font-family: var(--font-main); font-size: 1.1rem; font-weight: 800; cursor: pointer; background: #e0e0e0; color: #333; transition: opacity 0.2s; }
         button:active { opacity: 0.8; }
         button.primary { background: var(--accent); color: white; }
         button.danger { background: var(--danger); color: white; }
-        
+
         .flex-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
         .day-toggle { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; font-size: 1.1rem; color: #777; }
         .day-toggle.active { background: var(--accent); color: white; border-color: var(--accent); }
-        
+
         .app-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 2px solid #eee; border-radius: 12px; margin-bottom: 0.8rem; background: #fafafa; }
 
         #yt-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; z-index: 100; display: flex; flex-direction: column; }
@@ -99,20 +126,40 @@
         .yt-video-tile .yt-title { font-size: 1rem; font-weight: 700; color: #0f0f0f; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.25rem; }
         .yt-video-tile .yt-channel-name { font-size: 0.85rem; color: #606060; font-weight: 600; }
 
+        /* Channel grid: compact 2-col on mobile */
+        #yt-channel-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            padding: 1rem;
+        }
+        #yt-channel-grid .app-tile {
+            min-height: 120px;
+            padding: 1rem;
+            border-radius: 20px;
+        }
+        #yt-channel-grid .app-tile .app-icon {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+        #yt-channel-grid .app-tile .app-name {
+            font-size: 1rem;
+        }
+
         #qr-container { display: flex; justify-content: center; margin: 1.5rem 0; padding: 1rem; background: white; border-radius: 12px; }
         #video-container { width: 100%; max-width: 400px; margin: 0 auto; position: relative; border-radius: 12px; overflow: hidden; }
         #qr-video { width: 100%; background: #000; display: block; }
-        
+
         /* Pin / Challenge */
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 300px; margin: 0 auto; }
         .key { padding: 20px; font-size: 1.8rem; border-radius: 16px; border: none; background: #f0f0f0; cursor: pointer; font-weight: 800; color: #444; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .key:active { transform: scale(0.95); }
         .pin-display { font-size: 2.5rem; text-align: center; letter-spacing: 0.8rem; margin-bottom: 1.5rem; min-height: 60px; font-weight: 900; color: #333; }
-        
+
         .pattern-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 250px; margin: 0 auto; }
         .pattern-dot { width: 60px; height: 60px; border-radius: 50%; background: #e0e0e0; margin: auto; cursor: pointer; }
         .pattern-dot.active { background: var(--accent); }
-        
+
         @media print {
             body * { visibility: hidden; }
             #qr-print-area, #qr-print-area * { visibility: visible; }
@@ -130,18 +177,13 @@
                 <div class="session-timer" id="session-timer-display">Loading...</div>
                 <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
                     <div class="clock" id="clock-display">00:00</div>
-                    <div style="font-size:0.6rem;color:#ccc;font-weight:600;letter-spacing:0.05em;">v1.1.0</div>
+                    <div style="font-size:0.6rem;color:#ccc;font-weight:600;letter-spacing:0.05em;">v1.2.0</div>
                 </div>
             </div>
-            <div class="app-grid" id="app-grid"></div>
-        </div>
-
-        <!-- Iframe Container -->
-        <div id="iframe-container" class="hidden">
-            <div class="iframe-header">
-                <button class="back-btn" id="iframe-back-btn">← Back to Home</button>
+            <div id="child-no-api" class="hidden">
+                <p>Ask a parent to set up YouTube in the parent panel.</p>
+                <button id="btn-watch-yt">Watch YouTube 📺</button>
             </div>
-            <iframe id="app-frame" sandbox="allow-scripts allow-same-origin allow-popups allow-forms" allowfullscreen></iframe>
         </div>
 
         <!-- YouTube Player -->
@@ -151,7 +193,7 @@
                 <span id="yt-header-title" style="font-size:1.2rem; font-weight:800; margin-left:1rem; color:#444;"></span>
             </div>
             <div id="yt-channels-view">
-                <div class="app-grid" id="yt-channel-grid" style="padding:2rem;"></div>
+                <div id="yt-channel-grid"></div>
             </div>
             <div id="yt-videos-view" class="hidden">
                 <div id="yt-video-grid"></div>
@@ -180,13 +222,13 @@
 
     <!-- Parent Overlays -->
     <div id="overlay-container" class="overlay hidden">
-        
+
         <!-- Challenge Gate -->
         <div id="challenge-gate" class="panel hidden">
             <button class="panel-close" id="close-challenge">&times;</button>
             <h2>Parent Access</h2>
             <p id="challenge-msg" style="margin-bottom: 1rem; color: #555; font-weight: 700;">Please solve to continue.</p>
-            
+
             <div id="math-challenge" class="hidden">
                 <div style="font-size: 2.5rem; text-align: center; margin-bottom: 1.5rem; font-weight: 900;" id="math-question"></div>
                 <input type="number" id="math-answer" placeholder="Answer" style="font-size: 1.8rem; text-align: center;">
@@ -202,7 +244,7 @@
                     <button class="key" data-val="C" style="background: #ffd5d5;">C</button><button class="key" data-val="0">0</button><button class="key" data-val="OK" style="background: #d5ffd5;">OK</button>
                 </div>
             </div>
-            
+
             <div id="pattern-challenge" class="hidden">
                 <div class="pattern-grid" id="pattern-grid">
                     <div class="pattern-dot" data-val="1"></div><div class="pattern-dot" data-val="2"></div><div class="pattern-dot" data-val="3"></div>
@@ -212,7 +254,7 @@
                 <button class="primary" style="width: 100%; margin-top: 1.5rem;" id="pattern-submit">Submit</button>
                 <button style="width: 100%; margin-top: 0.5rem;" id="pattern-clear">Clear</button>
             </div>
-            
+
             <div id="cooldown-msg" class="hidden" style="color: var(--danger); text-align: center; font-weight: 800; font-size: 1.2rem; margin-top: 1rem;">
                 Too many attempts. Try again in <span id="cooldown-time">60</span>s.
             </div>
@@ -230,12 +272,12 @@
                     <option value="pattern">Pattern</option>
                 </select>
             </div>
-            
+
             <div id="setup-pin-input-container" class="hidden form-group">
                 <label>Enter PIN</label>
                 <input type="password" id="setup-pin" placeholder="4-6 digits">
             </div>
-            
+
             <div id="setup-pattern-container" class="hidden form-group">
                 <label>Draw Pattern (Tap dots in order)</label>
                 <div class="pattern-grid" id="setup-pattern-grid">
@@ -245,7 +287,7 @@
                 </div>
                 <button style="width: 100%; margin-top: 0.5rem;" id="setup-pattern-clear">Clear</button>
             </div>
-            
+
             <button class="primary" style="width: 100%; margin-top: 1rem;" id="btn-finish-setup">Complete Setup</button>
         </div>
 
@@ -304,19 +346,6 @@
                     </div>
                 </section>
 
-                <!-- App Configuration -->
-                <section>
-                    <h3>App Configuration</h3>
-                    <div id="app-config-list"></div>
-                    <div style="margin-top: 1rem; padding: 1.5rem; background: #f0f0f0; border-radius: 12px;">
-                        <h4>Add Custom App</h4>
-                        <input type="text" id="custom-app-name" placeholder="App Name" style="margin-bottom: 0.8rem; margin-top: 0.8rem;">
-                        <input type="text" id="custom-app-url" placeholder="URL (must allow embedding)" style="margin-bottom: 0.8rem;">
-                        <input type="text" id="custom-app-icon" placeholder="Emoji Icon (e.g. 🎮)" style="margin-bottom: 1rem;">
-                        <button id="btn-add-app" class="primary" style="width: 100%;">Add App</button>
-                    </div>
-                </section>
-
                 <!-- YouTube Settings -->
                 <section>
                     <h3>YouTube Settings</h3>
@@ -354,7 +383,7 @@
                     <button id="btn-generate-qr" class="primary">Generate Backup QR</button>
                     <div id="qr-container" class="hidden"></div>
                     <button id="btn-print-qr" class="hidden" style="margin-top: 0.5rem; width: 100%;">Print QR Code</button>
-                    
+
                     <h4 style="margin-top: 2rem;">Restore from Backup</h4>
                     <button id="btn-scan-qr">Scan QR Code</button>
                     <div id="video-container" class="hidden" style="margin-top: 1rem;">
@@ -383,17 +412,8 @@
     <script>
         // --- Core Logic ---
 
-        const DEFAULT_APPS = [
-            { id: 'scratch', name: 'Scratch', url: 'https://scratch.mit.edu/projects/31876/embed', icon: '🐱', visible: true, default: true },
-            { id: 'chess', name: 'Chess', url: 'https://www.chess.com/play/computer?embed=1', icon: '♟️', visible: true, default: true },
-            { id: '2048', name: '2048', url: 'https://gabrielecirulli.github.io/2048/', icon: '🔢', visible: true, default: true },
-            { id: 'draw', name: 'Drawing', url: 'https://sketchpad.app/en/', icon: '🎨', visible: true, default: true },
-            { id: 'yt', name: 'YouTube', url: 'youtube', icon: '📺', visible: true, default: true, type: 'youtube' }
-        ];
-
         const DEFAULT_CONFIG = {
             v: 1,
-            apps: DEFAULT_APPS,
             sessionMins: 45,
             fadeStart: 30,
             minSat: 0.2,
@@ -418,20 +438,17 @@
         let currentSat = 1.0;
         let wrongAttempts = 0;
         let cooldownEnd = 0;
-        
+
         let currentMathAnswer = 0;
         let currentPinInput = '';
         let currentPattern = [];
-        
+
         let scanStream = null;
 
         // Elements - declared as let to assign after DOM ready
         let elAppContainer;
         let elChildView;
-        let elIframeContainer;
-        let elAppFrame;
         let elLockScreen;
-        let elAppGrid;
         let elSessionTimer;
         let elClock;
         let elLockClock;
@@ -440,15 +457,12 @@
         let elSetupPanel;
         let elParentPanel;
         let elParentTrigger;
-        
+
         // Load & Initialize
         function bindElements() {
             elAppContainer = document.getElementById('app-container');
             elChildView = document.getElementById('child-view');
-            elIframeContainer = document.getElementById('iframe-container');
-            elAppFrame = document.getElementById('app-frame');
             elLockScreen = document.getElementById('lock-screen');
-            elAppGrid = document.getElementById('app-grid');
             elSessionTimer = document.getElementById('session-timer-display');
             elClock = document.getElementById('clock-display');
             elLockClock = document.getElementById('lock-clock-display');
@@ -462,16 +476,22 @@
             bindElements();
             loadConfig();
             loadSession();
-            
+
             updateUI();
             startLoops();
 
             if (!config.challengeHash && config.challengeType !== 'math') {
-                // Needs setup
                 showOverlay(elSetupPanel);
             }
-            
+
             setupEventListeners();
+
+            // After loops started, open YouTube if possible; otherwise show prompt
+            if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                openYoutubePlayer();
+            } else {
+                document.getElementById('child-no-api').classList.remove('hidden');
+            }
         }
 
         function loadConfig() {
@@ -479,27 +499,12 @@
                 const stored = localStorage.getItem('fadedown_config');
                 if (stored) {
                     config = JSON.parse(stored);
-                    if (config.v !== 1) { config.v = 1; } // Migrate if needed
-                    // Merge new default apps if missing
-                    DEFAULT_APPS.forEach(da => {
-                        if (!config.apps.find(a => a.id === da.id)) {
-                            config.apps.push(da);
-                        }
-                    });
-                    // Migrate yt app to use new YouTube player
-                    const ytApp = config.apps.find(a => a.id === 'yt');
-                    if (ytApp) { ytApp.type = 'youtube'; ytApp.url = 'youtube'; ytApp.name = 'YouTube'; }
-                    // Keep default app URLs in sync with latest values
-                    DEFAULT_APPS.forEach(da => {
-                        const existing = config.apps.find(a => a.id === da.id);
-                        if (existing && existing.default) existing.url = da.url;
-                    });
+                    if (config.v !== 1) { config.v = 1; }
                     // Add new config fields if missing
                     if (config.youtubeApiKey === undefined) config.youtubeApiKey = '';
                     if (!config.youtubeChannels) config.youtubeChannels = [];
 
                     // Add any missing default kids channels to existing config
-                    const defaultChannelIds = (DEFAULT_CONFIG.youtubeChannels || []).map(c => c.id);
                     (DEFAULT_CONFIG.youtubeChannels || []).forEach(def => {
                         if (!config.youtubeChannels.find(c => c.id === def.id)) {
                             config.youtubeChannels.push(JSON.parse(JSON.stringify(def)));
@@ -550,7 +555,7 @@
 
         // --- Cryptography ---
         async function sha256(message) {
-            const msgBuffer = new TextEncoder().encode(message);                    
+            const msgBuffer = new TextEncoder().encode(message);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -559,10 +564,9 @@
         // --- Loops & Logic ---
         function startLoops() {
             setInterval(updateClocks, 1000);
-            setInterval(updateFade, 10000); // Check every 10s
+            setInterval(updateFade, 10000);
             updateClocks();
             updateFade();
-            renderAppGrid();
         }
 
         function updateClocks() {
@@ -570,9 +574,9 @@
             const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             elClock.innerText = timeStr;
             elLockClock.innerText = timeStr;
-            
+
             checkSchedule(now);
-            
+
             // Session timer
             if (sessionEndTime) {
                 const msLeft = sessionEndTime - Date.now();
@@ -588,11 +592,11 @@
         function checkSchedule(now) {
             const day = now.getDay();
             const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-            
+
             let isAllowed = true;
             if (!config.days.includes(day)) isAllowed = false;
             if (timeStr < config.schedule.start || timeStr > config.schedule.end) isAllowed = false;
-            
+
             // Check session ended
             if (sessionEndTime && Date.now() > sessionEndTime) {
                 isAllowed = false;
@@ -608,8 +612,7 @@
             if (!isAllowed && elOverlayContainer.classList.contains('hidden')) {
                 elLockScreen.classList.remove('hidden');
                 elChildView.classList.add('hidden');
-                elIframeContainer.classList.add('hidden');
-                elAppFrame.src = '';
+                document.getElementById('yt-container').classList.add('hidden');
             } else if (isAllowed && !elLockScreen.classList.contains('hidden')) {
                 elLockScreen.classList.add('hidden');
                 elChildView.classList.remove('hidden');
@@ -633,40 +636,9 @@
                     currentSat = Math.max(config.minSat, currentSat);
                 }
             }
-            
+
             elAppContainer.style.filter = `saturate(${currentSat})`;
             document.getElementById('current-sat-display').innerText = `${Math.round(currentSat * 100)}%`;
-        }
-
-        // --- Rendering ---
-        function renderAppGrid() {
-            elAppGrid.innerHTML = '';
-            config.apps.filter(a => a.visible).forEach(app => {
-                const tile = document.createElement('div');
-                tile.className = 'app-tile';
-                tile.innerHTML = `
-                    <div class="app-icon">${app.icon}</div>
-                    <div class="app-name">${app.name}</div>
-                `;
-                tile.addEventListener('click', () => openApp(app.url, app.type));
-                elAppGrid.appendChild(tile);
-            });
-        }
-
-        function openApp(url, type) {
-            if (type === 'youtube') {
-                openYoutubePlayer();
-                return;
-            }
-            elAppFrame.src = url;
-            elIframeContainer.classList.remove('hidden');
-            elChildView.classList.add('hidden');
-        }
-
-        function closeApp() {
-            elAppFrame.src = '';
-            elIframeContainer.classList.add('hidden');
-            elChildView.classList.remove('hidden');
         }
 
         // --- YouTube Player ---
@@ -674,13 +646,14 @@
 
         function openYoutubePlayer() {
             if (!config.youtubeApiKey) {
-                alert("Set a YouTube API key in Parent Settings > YouTube Settings to use this feature.");
+                document.getElementById('child-no-api').classList.remove('hidden');
                 return;
             }
             if (!config.youtubeChannels || config.youtubeChannels.length === 0) {
-                alert("No YouTube channels configured. Add some in Parent Settings > YouTube Settings.");
+                document.getElementById('child-no-api').classList.remove('hidden');
                 return;
             }
+            document.getElementById('child-no-api').classList.add('hidden');
             elChildView.classList.add('hidden');
             document.getElementById('yt-container').classList.remove('hidden');
             showYtChannels();
@@ -802,6 +775,14 @@
             document.getElementById('yt-container').classList.add('hidden');
             elChildView.classList.remove('hidden');
             currentYtChannel = null;
+            // Show child view with appropriate state
+            if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                document.getElementById('child-no-api').classList.add('hidden');
+                // Re-open YouTube picker immediately
+                openYoutubePlayer();
+            } else {
+                document.getElementById('child-no-api').classList.remove('hidden');
+            }
         }
 
         function renderYtChannelConfigList() {
@@ -828,24 +809,6 @@
                     renderYtChannelConfigList();
                 });
             });
-        }
-
-        function parseYoutubeDirectUrl(input) {
-            const url = input.trim();
-            if (!url) return null;
-            const idMatch = url.match(/(?:v=|youtu\.be\/|embed\/)([A-Za-z0-9_-]{11})/);
-            if (idMatch) {
-                return `https://www.youtube.com/embed/${idMatch[1]}?autoplay=0&rel=0&modestbranding=1`;
-            }
-            const playlistMatch = url.match(/[?&]list=([A-Za-z0-9_-]+)/);
-            if (playlistMatch) {
-                return `https://www.youtube.com/embed/videoseries?list=${playlistMatch[1]}&rel=0&modestbranding=1`;
-            }
-            const channelMatch = url.match(/(?:youtube\.com\/(?:channel\/|c\/|@)([A-Za-z0-9_\-]+))/);
-            if (channelMatch) {
-                return `https://www.youtube.com/embed?listType=user_uploads&list=${channelMatch[1]}&rel=0&modestbranding=1`;
-            }
-            return null;
         }
 
         function extractPlaylistId(url) {
@@ -902,25 +865,6 @@
             }
         }
 
-        function addYoutubeDirect() {
-            const input = document.getElementById('yt-direct-url').value.trim();
-            if (!input) { alert('Please enter a YouTube video or playlist URL.'); return; }
-
-            const embed = parseYoutubeDirectUrl(input);
-            if (!embed) {
-                alert('Unable to parse YouTube URL. Use watch?v=..., playlist?list=..., youtu.be/..., or channel/@ handle URL.');
-                return;
-            }
-
-            const name = input.includes('playlist') ? 'YouTube Playlist' : input.includes('watch') || input.includes('youtu.be') ? 'YouTube Video' : 'YouTube Channel';
-            config.apps.push({ id: 'yt_direct_' + Date.now(), name, url: embed, icon: '📺', visible: true, default: false });
-            saveConfig();
-            renderAppConfigList();
-            renderAppGrid();
-            document.getElementById('yt-direct-url').value = '';
-            alert('YouTube item added to easy launch tiles. It uses embed URL, no API key required.');
-        }
-
         function addYoutubePlaylist() {
             const nameInput = document.getElementById('yt-playlist-name').value.trim();
             const urlInput = document.getElementById('yt-playlist-url').value.trim();
@@ -934,9 +878,9 @@
 
             const name = nameInput || 'YouTube Playlist';
             const newCh = {
-                id: 'playlist_' + playlistId, // Unique ID for playlist
+                id: 'playlist_' + playlistId,
                 name: name,
-                thumbnail: '', // Could fetch from API if needed
+                thumbnail: '',
                 uploadsPlaylistId: playlistId
             };
 
@@ -971,13 +915,13 @@
                 alert(`Please wait ${Math.ceil((cooldownEnd - Date.now())/1000)} seconds.`);
                 return;
             }
-            
+
             openParentPanel();
         }
 
         async function verifyChallenge() {
             let success = false;
-            
+
             if (config.challengeType === 'math') {
                 const ans = parseInt(document.getElementById('math-answer').value, 10);
                 success = (ans === currentMathAnswer);
@@ -988,7 +932,7 @@
                 const hash = await sha256(currentPattern.join(''));
                 success = (hash === config.challengeHash);
             }
-            
+
             if (success) {
                 wrongAttempts = 0;
                 openParentPanel();
@@ -1023,14 +967,12 @@
             document.getElementById('val-min-sat').innerText = Math.round(config.minSat * 100);
             document.getElementById('set-schedule-start').value = config.schedule.start;
             document.getElementById('set-schedule-end').value = config.schedule.end;
-            
+
             document.querySelectorAll('#set-days .day-toggle').forEach(el => {
                 const day = parseInt(el.getAttribute('data-day'), 10);
                 if (config.days.includes(day)) el.classList.add('active');
                 else el.classList.remove('active');
             });
-            
-            renderAppConfigList();
 
             document.getElementById('yt-api-key').value = config.youtubeApiKey || '';
             renderYtChannelConfigList();
@@ -1039,53 +981,13 @@
             document.getElementById('current-challenge-type-label').innerText = typeNames[config.challengeType];
         }
 
-        function renderAppConfigList() {
-            const list = document.getElementById('app-config-list');
-            list.innerHTML = '';
-            config.apps.forEach((app, index) => {
-                const item = document.createElement('div');
-                item.className = 'app-list-item';
-                item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <span style="font-size: 1.5rem;">${app.icon}</span>
-                        <strong style="font-size: 1.1rem;">${app.name}</strong>
-                    </div>
-                    <div style="display: flex; gap: 0.5rem;">
-                        <button class="toggle-btn" data-idx="${index}">${app.visible ? 'Hide' : 'Show'}</button>
-                        ${!app.default ? `<button class="delete-btn danger" data-idx="${index}">Del</button>` : ''}
-                    </div>
-                `;
-                list.appendChild(item);
-            });
-            
-            document.querySelectorAll('.toggle-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = e.target.getAttribute('data-idx');
-                    config.apps[idx].visible = !config.apps[idx].visible;
-                    saveConfig();
-                    renderAppConfigList();
-                    renderAppGrid();
-                });
-            });
-            
-            document.querySelectorAll('.delete-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const idx = e.target.getAttribute('data-idx');
-                    config.apps.splice(idx, 1);
-                    saveConfig();
-                    renderAppConfigList();
-                    renderAppGrid();
-                });
-            });
-        }
-
         function gatherAndSaveSettings() {
             config.sessionMins = parseInt(document.getElementById('set-session-mins').value, 10);
             config.fadeStart = parseInt(document.getElementById('set-fade-start').value, 10);
             config.minSat = parseInt(document.getElementById('set-min-sat').value, 10) / 100;
             config.schedule.start = document.getElementById('set-schedule-start').value;
             config.schedule.end = document.getElementById('set-schedule-end').value;
-            
+
             const days = [];
             document.querySelectorAll('#set-days .day-toggle.active').forEach(el => {
                 days.push(parseInt(el.getAttribute('data-day'), 10));
@@ -1094,7 +996,7 @@
             config.youtubeApiKey = document.getElementById('yt-api-key').value.trim();
 
             saveConfig();
-            loadSession(); // Recalculate end time
+            loadSession();
             updateFade();
             updateClocks();
         }
@@ -1102,15 +1004,15 @@
         // --- QR Backup & Restore ---
         function generateQR() {
             const safeConfig = JSON.parse(JSON.stringify(config));
-            delete safeConfig.challengeHash; // Do not export challenge answer
-            
+            delete safeConfig.challengeHash;
+
             const jsonStr = JSON.stringify(safeConfig);
             const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
-            
+
             const container = document.getElementById('qr-container');
             container.innerHTML = '';
             container.classList.remove('hidden');
-            
+
             new QRCode(container, {
                 text: b64,
                 width: 256,
@@ -1119,7 +1021,7 @@
                 colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
-            
+
             document.getElementById('btn-print-qr').classList.remove('hidden');
         }
 
@@ -1127,7 +1029,7 @@
             const video = document.getElementById('qr-video');
             const container = document.getElementById('video-container');
             container.classList.remove('hidden');
-            
+
             try {
                 scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } });
                 video.srcObject = scanStream;
@@ -1151,7 +1053,7 @@
                 canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
                 const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
                 const code = jsQR(imageData.data, imageData.width, imageData.height, { inversionAttempts: "dontInvert" });
-                
+
                 if (code) {
                     stopScanner();
                     processRestore(code.data);
@@ -1175,7 +1077,6 @@
                 const restored = JSON.parse(jsonStr);
                 if (restored.v) {
                     config = restored;
-                    // Reset challenge
                     config.challengeType = 'math';
                     config.challengeHash = null;
                     saveConfig();
@@ -1200,7 +1101,6 @@
             elParentTrigger.addEventListener('touchstart', () => { pressTimer = window.setTimeout(triggerParentPanel, 1500); });
             elParentTrigger.addEventListener('touchend', () => { clearTimeout(pressTimer); });
 
-            document.getElementById('iframe-back-btn').addEventListener('click', closeApp);
             document.getElementById('yt-back-btn').addEventListener('click', () => {
                 const playerView = document.getElementById('yt-player-view');
                 const videosView = document.getElementById('yt-videos-view');
@@ -1217,12 +1117,20 @@
                     closeYoutubePlayer();
                 }
             });
+
+            document.getElementById('btn-watch-yt').addEventListener('click', () => {
+                if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                    openYoutubePlayer();
+                } else {
+                    triggerParentPanel();
+                }
+            });
+
             document.getElementById('btn-add-yt-channel').addEventListener('click', addYoutubeChannel);
             document.getElementById('btn-add-yt-playlist').addEventListener('click', addYoutubePlaylist);
             document.getElementById('restore-link').addEventListener('click', (e) => {
                 e.preventDefault();
-                showOverlay(elParentPanel); // Show parent panel directly, or prompt for challenge?
-                // If they are locked out, maybe allow direct restore access
+                showOverlay(elParentPanel);
                 document.getElementById('parent-panel-content').innerHTML = `
                     <h2>Emergency Restore</h2>
                     <button id="btn-scan-qr-em" class="primary">Scan QR</button>
@@ -1233,7 +1141,7 @@
                     <button id="btn-restore-text-em" style="margin-top:0.5rem;">Restore from Text</button>
                     <button onclick="window.location.reload()" style="margin-top:2rem;">Cancel</button>
                 `;
-                
+
                 document.getElementById('btn-scan-qr-em').addEventListener('click', startScanner);
                 document.getElementById('btn-restore-text-em').addEventListener('click', () => {
                     processRestore(document.getElementById('restore-text-em').value);
@@ -1249,7 +1157,6 @@
                     console.log('Settings saved');
                 } catch (e) {
                     console.log('Error saving settings:', e);
-                    // Ignore if settings elements not found (e.g., emergency restore mode)
                 }
                 hideOverlay();
             });
@@ -1259,7 +1166,7 @@
             document.getElementById('math-answer').addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') verifyChallenge();
             });
-            
+
             // PIN
             document.querySelectorAll('#pin-challenge .key').forEach(btn => {
                 btn.addEventListener('click', (e) => {
@@ -1321,29 +1228,12 @@
                     document.getElementById(`val-${id}`).innerText = e.target.value;
                 });
             });
-            
+
             // Days toggle
             document.querySelectorAll('#set-days .day-toggle').forEach(el => {
                 el.addEventListener('click', (e) => {
                     e.target.classList.toggle('active');
                 });
-            });
-
-            // Add App
-            document.getElementById('btn-add-app').addEventListener('click', () => {
-                const name = document.getElementById('custom-app-name').value;
-                const url = document.getElementById('custom-app-url').value;
-                const icon = document.getElementById('custom-app-icon').value || '✨';
-                if (name && url) {
-                    if (config.apps.length >= 10) { alert("Max apps reached."); return; }
-                    config.apps.push({ id: 'custom_'+Date.now(), name, url, icon, visible: true, default: false });
-                    saveConfig();
-                    renderAppConfigList();
-                    renderAppGrid();
-                    document.getElementById('custom-app-name').value = '';
-                    document.getElementById('custom-app-url').value = '';
-                    document.getElementById('custom-app-icon').value = '';
-                }
             });
 
             // QR
@@ -1357,7 +1247,7 @@
             });
 
             document.getElementById('unlock-btn').addEventListener('click', triggerParentPanel);
-            
+
             // Setup Listeners
             const setupType = document.getElementById('setup-challenge-type');
             setupType.addEventListener('change', (e) => {
@@ -1366,7 +1256,7 @@
                 if (e.target.value === 'pin') document.getElementById('setup-pin-input-container').classList.remove('hidden');
                 if (e.target.value === 'pattern') document.getElementById('setup-pattern-container').classList.remove('hidden');
             });
-            
+
             let setupPattern = [];
             document.querySelectorAll('#setup-pattern-grid .pattern-dot').forEach(dot => {
                 dot.addEventListener('click', (e) => {
@@ -1381,7 +1271,7 @@
                 setupPattern = [];
                 document.querySelectorAll('#setup-pattern-grid .pattern-dot').forEach(d => d.classList.remove('active'));
             });
-            
+
             document.getElementById('btn-finish-setup').addEventListener('click', async () => {
                 const type = setupType.value;
                 config.challengeType = type;
@@ -1400,7 +1290,7 @@
                 updateUI();
                 startLoops();
             });
-            
+
             document.getElementById('btn-change-challenge').addEventListener('click', () => {
                 hideOverlay();
                 showOverlay(elSetupPanel);
@@ -1418,7 +1308,7 @@
                 } catch (e) {}
             });
         }
-        
+
         function updateUI() {
             // Initial render
         }
