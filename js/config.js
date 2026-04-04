@@ -5,7 +5,7 @@
             sessionMins: 45,
             fadeStart: 30,
             minSat: 0.2,
-            schedule: { start: "00:00", end: "23:59" },
+            schedule: { start: "00:00", end: "24:00" },
             days: [0, 1, 2, 3, 4, 5, 6],
             challengeType: "pin",
             challengeHash: null,
@@ -39,6 +39,10 @@
                     if (config.youtubeApiKey === undefined) config.youtubeApiKey = '';
                     if (config.hideShorts === undefined) config.hideShorts = true;
                     if (!config.youtubeChannels) config.youtubeChannels = [];
+                    if (!config.schedule) config.schedule = { start: '00:00', end: '24:00' };
+                    if (!config.days || config.days.length === 0) config.days = [0,1,2,3,4,5,6];
+                    // Migrate old "23:59" end to "24:00" so late-night access works
+                    if (config.schedule.end === '23:59') config.schedule.end = '24:00';
 
                     saveConfig();
                 } else {

@@ -56,11 +56,15 @@
 
         function checkSchedule(now) {
             const day = now.getDay();
-            const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            const hh = String(now.getHours()).padStart(2, '0');
+            const mm = String(now.getMinutes()).padStart(2, '0');
+            const timeStr = `${hh}:${mm}`;
 
             let isAllowed = true;
-            if (!config.days.includes(day)) isAllowed = false;
-            if (timeStr < config.schedule.start || timeStr > config.schedule.end) isAllowed = false;
+            if (!config.days || !config.days.includes(day)) isAllowed = false;
+            const start = config.schedule?.start || '00:00';
+            const end   = config.schedule?.end   || '24:00';
+            if (timeStr < start || timeStr > end) isAllowed = false;
 
             // Check session ended
             if (sessionEndTime && Date.now() > sessionEndTime) {
