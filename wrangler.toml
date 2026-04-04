@@ -1,5 +1,0 @@
-name = "u2be"
-compatibility_date = "2026-04-03"
-
-[assets]
-directory = "."
