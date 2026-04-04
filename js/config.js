@@ -14,7 +14,10 @@
             youtubeChannels: []
         };
 
-        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+        const CORS_PROXIES = [
+            'https://corsproxy.io/?',
+            'https://api.allorigins.win/raw?url='
+        ];
 
         let config = null;
 

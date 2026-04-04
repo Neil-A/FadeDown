@@ -117,32 +117,37 @@
         }
 
         async function fetchChannelRSS(channel) {
-            try {
-                const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channel.id}`;
-                const res = await fetch(CORS_PROXY + encodeURIComponent(rssUrl));
-                if (!res.ok) return [];
-                const doc = new DOMParser().parseFromString(await res.text(), 'text/xml');
-                return Array.from(doc.querySelectorAll('entry')).map(entry => {
-                    const videoId = entry.querySelector('videoId')?.textContent;
-                    const title = entry.querySelector('title')?.textContent;
-                    const published = entry.querySelector('published')?.textContent;
-                    const thumbnail = entry.querySelector('thumbnail')?.getAttribute('url')
-                        || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
-                    return {
-                        id: videoId,
-                        title,
-                        thumbnail,
-                        publishedAt: published,
-                        channelId: channel.id,
-                        channelName: channel.name,
-                        channelThumb: channel.thumbnail,
-                        playlistId: null
-                    };
-                }).filter(v => v.id && v.title);
-            } catch(e) {
-                console.warn('RSS fetch failed for', channel.id, e);
-                return [];
+            const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channel.id}`;
+            for (const proxy of CORS_PROXIES) {
+                try {
+                    const res = await fetch(proxy + encodeURIComponent(rssUrl));
+                    if (!res.ok) continue;
+                    const doc = new DOMParser().parseFromString(await res.text(), 'text/xml');
+                    const entries = Array.from(doc.querySelectorAll('entry'));
+                    if (entries.length === 0) continue;
+                    return entries.map(entry => {
+                        // <id> contains "yt:video:VIDEO_ID" — safer than namespace querySelector
+                        const idText = entry.querySelector('id')?.textContent || '';
+                        const videoId = idText.startsWith('yt:video:') ? idText.slice(9) : null;
+                        const title = entry.querySelector('title')?.textContent;
+                        const published = entry.querySelector('published')?.textContent;
+                        const thumbnail = `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                        return {
+                            id: videoId,
+                            title,
+                            thumbnail,
+                            publishedAt: published,
+                            channelId: channel.id,
+                            channelName: channel.name,
+                            channelThumb: channel.thumbnail,
+                            playlistId: null
+                        };
+                    }).filter(v => v.id && v.title);
+                } catch(e) {
+                    console.warn('RSS fetch failed for', channel.id, 'via', proxy, e);
+                }
             }
+            return [];
         }
 
         function buildFilterChips() {

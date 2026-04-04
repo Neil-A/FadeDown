@@ -1,6 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <rect width="512" height="512" rx="100" fill="#4a90e2" />
-    <path d="M256 120 A136 136 0 1 0 392 256 A136 136 0 0 0 256 120 Z" fill="#ffffff" />
-    <circle cx="256" cy="256" r="90" fill="#f0f7f4" />
-    <path d="M256 180 L256 256 L310 310" stroke="#4a90e2" stroke-width="24" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a1a1a"/>
+      <stop offset="100%" stop-color="#0a0a0a"/>
+    </linearGradient>
+    <linearGradient id="redFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ff2020" stop-opacity="1"/>
+      <stop offset="55%"  stop-color="#cc0000" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#880000" stop-opacity="0.12"/>
+    </linearGradient>
+    <linearGradient id="playFade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="60%"  stop-color="#ffffff" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="shineGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.08"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- App background -->
+  <rect width="512" height="512" rx="108" fill="url(#bgGrad)"/>
+
+  <!-- YouTube-style play button pill — fades toward bottom -->
+  <rect x="68" y="148" width="376" height="216" rx="52" fill="url(#redFade)"/>
+
+  <!-- Subtle top-shine on the pill -->
+  <rect x="68" y="148" width="376" height="108" rx="52" fill="url(#shineGrad)"/>
+
+  <!-- Play triangle — also fades with the button -->
+  <polygon points="204,196 348,256 204,316" fill="url(#playFade)"/>
+
+  <!-- "Fade" vignette at the very bottom of the icon to reinforce the concept -->
+  <rect x="0" y="390" width="512" height="122" rx="0" fill="url(#bgGrad)" opacity="0.55"/>
+  <rect width="512" height="512" rx="108" fill="none"/>
 </svg>
