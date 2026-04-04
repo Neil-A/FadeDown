@@ -62,7 +62,7 @@
             }
             // First-time setup: PIN or pattern selected but no hash stored yet
             if (!config.challengeHash && config.challengeType !== 'math') {
-                showOverlay(elSetupPanel);
+                showSetupPanel(false);
             } else {
                 showChallengeGate();
             }

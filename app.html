@@ -139,8 +139,20 @@
 
         <!-- Initial Setup -->
         <div id="setup-panel" class="panel hidden">
-            <h2>Welcome to FadeTube</h2>
-            <p style="margin-bottom: 1.5rem;">Let's set up your parent access challenge.</p>
+            <h2 id="setup-panel-title">Welcome to FadeTube</h2>
+            <p id="setup-panel-subtitle" style="margin-bottom: 1.5rem;">Let's set up your parent access challenge.</p>
+
+            <!-- Math gate — shown only when resetting an existing PIN/pattern -->
+            <div id="setup-math-gate" class="hidden form-group" style="background:var(--bg-tertiary);border-radius:12px;padding:1rem;margin-bottom:1rem;">
+                <label style="font-size:1rem;">First, solve this to prove you're the parent:</label>
+                <p id="setup-math-question" style="font-size:1.6rem;font-weight:900;margin:0.6rem 0;text-align:center;"></p>
+                <input type="number" id="setup-math-answer" placeholder="Your answer" style="text-align:center;">
+                <button class="primary" style="width:100%;margin-top:0.6rem;" id="btn-verify-setup-math">Verify →</button>
+                <p id="setup-math-error" class="hidden" style="color:#ff4444;margin-top:0.5rem;text-align:center;font-weight:700;"></p>
+            </div>
+
+            <!-- Actual setup form — locked until math gate passed (on reset) -->
+            <div id="setup-form-body">
             <div class="form-group">
                 <label>Select Challenge Type</label>
                 <select id="setup-challenge-type">
@@ -166,6 +178,7 @@
             </div>
 
             <button class="primary" style="width: 100%; margin-top: 1rem;" id="btn-finish-setup">Complete Setup</button>
+            </div><!-- /setup-form-body -->
         </div>
 
         <!-- Parent Panel -->

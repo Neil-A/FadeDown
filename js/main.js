@@ -108,11 +108,11 @@
                 });
             });
 
-            // Reset PIN (visible after wrong attempts — bypasses cooldown)
+            // Reset PIN (visible after wrong attempts — requires math gate)
             document.getElementById('btn-reset-pin').addEventListener('click', () => {
                 wrongAttempts = 0;
                 cooldownEnd = 0;
-                showOverlay(elSetupPanel);
+                showSetupPanel(true);
             });
 
             // Closers
@@ -218,6 +218,48 @@
 
             document.getElementById('unlock-btn').addEventListener('click', triggerParentPanel);
 
+            // Setup panel helper — requireMath=true when resetting an existing PIN/pattern
+            let setupMathAnswer = 0;
+            window.showSetupPanel = function(requireMath) {
+                const gate = document.getElementById('setup-math-gate');
+                const formBody = document.getElementById('setup-form-body');
+                const title = document.getElementById('setup-panel-title');
+                const subtitle = document.getElementById('setup-panel-subtitle');
+                document.getElementById('setup-math-error').classList.add('hidden');
+                document.getElementById('setup-math-answer').value = '';
+
+                if (requireMath) {
+                    title.textContent = 'Reset Parent Access';
+                    subtitle.textContent = 'Solve the maths puzzle to confirm you\'re the parent, then set a new challenge.';
+                    const a = Math.floor(Math.random() * 12) + 1;
+                    const b = Math.floor(Math.random() * 12) + 1;
+                    setupMathAnswer = a + b;
+                    document.getElementById('setup-math-question').textContent = `${a} + ${b} = ?`;
+                    gate.classList.remove('hidden');
+                    formBody.classList.add('hidden');
+                } else {
+                    title.textContent = config.challengeHash ? 'Change Challenge' : 'Welcome to FadeTube';
+                    subtitle.textContent = config.challengeHash ? 'Set a new parent access challenge.' : 'Let\'s set up your parent access challenge.';
+                    gate.classList.add('hidden');
+                    formBody.classList.remove('hidden');
+                }
+                showOverlay(elSetupPanel);
+            };
+
+            document.getElementById('btn-verify-setup-math').addEventListener('click', () => {
+                const ans = parseInt(document.getElementById('setup-math-answer').value, 10);
+                const elErr = document.getElementById('setup-math-error');
+                if (ans === setupMathAnswer) {
+                    document.getElementById('setup-math-gate').classList.add('hidden');
+                    document.getElementById('setup-form-body').classList.remove('hidden');
+                    elErr.classList.add('hidden');
+                } else {
+                    elErr.textContent = 'Incorrect, try again.';
+                    elErr.classList.remove('hidden');
+                    document.getElementById('setup-math-answer').value = '';
+                }
+            });
+
             // Setup Listeners
             const setupType = document.getElementById('setup-challenge-type');
             const refreshSetupUI = (val) => {
@@ -263,7 +305,7 @@
 
             document.getElementById('btn-change-challenge').addEventListener('click', () => {
                 hideOverlay();
-                showOverlay(elSetupPanel);
+                showSetupPanel(false);
             });
 
             // YouTube embed error detection
