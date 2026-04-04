@@ -1,6 +1,6 @@
 {
-  "name": "FadeDown",
-  "short_name": "FadeDown",
+  "name": "FadeTube",
+  "short_name": "FadeTube",
   "description": "Child screen-time management tool.",
   "start_url": "./fadedown.html",
   "display": "fullscreen",

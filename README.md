@@ -1,14 +1,14 @@
-# FadeDown
+# FadeTube
 
 A browser-based screen time manager for young kids. No app install, no account, no server — just open the page and go.
 
-**Live app**: https://neil-a.github.io/FadeDown/fadedown.html
+**Live app**: https://fadetube.com
 
 ---
 
 ## What it does
 
-FadeDown gives kids a curated YouTube feed. As their session nears its end, the screen slowly and imperceptibly loses colour saturation — going from full colour to near-greyscale. Kids naturally disengage as the experience becomes less stimulating. When the session ends, the screen locks with a gentle message.
+FadeTube gives kids a curated YouTube feed. As their session nears its end, the screen slowly and imperceptibly loses colour saturation — going from full colour to near-greyscale. Kids naturally disengage as the experience becomes less stimulating. When the session ends, the screen locks with a gentle message.
 
 There's no alarm, no countdown timer, no confrontation. The fade does the work.
 
@@ -42,7 +42,7 @@ There's no alarm, no countdown timer, no confrontation. The fade does the work.
 
 The YouTube feature requires a free **YouTube Data API v3** key.
 
-**Why**: FadeDown fetches video lists from channels using the YouTube Data API. Without a key it can't browse channels.
+**Why**: FadeTube fetches video lists from channels using the YouTube Data API. Without a key it can't browse channels.
 
 **How to get one (free)**:
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
@@ -51,7 +51,7 @@ The YouTube feature requires a free **YouTube Data API v3** key.
 4. Go to **Credentials** → **Create Credentials** → **API Key**
 5. Copy the key
 
-**Where to enter it**: Open FadeDown → tap the lock icon → Parent Panel → YouTube Settings → paste key.
+**Where to enter it**: Open FadeTube → tap the lock icon → Parent Panel → YouTube Settings → paste key.
 
 The key is stored only in your browser's `localStorage`. It never leaves your device — except in API calls made directly to Google's servers.
 
@@ -64,7 +64,7 @@ To lock it to your site only:
 1. Go to [Google Cloud Console](https://console.cloud.google.com) → **APIs & Services** → **Credentials**
 2. Click your API key
 3. Under **Application restrictions** → select **HTTP referrers (websites)**
-4. Add your site, e.g. `https://neil-a.github.io/*` (or your own domain)
+4. Add your site, e.g. `https://fadetube.com/*`
 5. Save
 
 After this the key only works when requests come from your site — useless to anyone else.
@@ -75,7 +75,7 @@ After this the key only works when requests come from your site — useless to a
 
 ## Parent Access
 
-FadeDown requires a challenge to access the parent panel, preventing kids from changing settings.
+FadeTube requires a challenge to access the parent panel, preventing kids from changing settings.
 
 ### First-time setup
 
@@ -102,7 +102,7 @@ You can also change your challenge type at any time from inside the parent panel
 
 ## Security model
 
-FadeDown is designed for young children (under ~10) in a supervised environment.
+FadeTube is designed for young children (under ~10) in a supervised environment.
 
 | Layer | How |
 |---|---|
@@ -118,7 +118,7 @@ FadeDown is designed for young children (under ~10) in a supervised environment.
 
 ### GitHub / hosting security
 
-FadeDown is a single HTML file served from GitHub Pages. A compromised GitHub account means a compromised app — an attacker with push access could modify the JS to exfiltrate your YouTube API key, capture your PIN before hashing, or serve arbitrary content to your child's locked-down device.
+FadeTube is a single HTML file served from GitHub Pages. A compromised GitHub account means a compromised app — an attacker with push access could modify the JS to exfiltrate your YouTube API key, capture your PIN before hashing, or serve arbitrary content to your child's locked-down device.
 
 **Mitigations:**
 
