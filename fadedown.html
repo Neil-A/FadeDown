@@ -668,7 +668,11 @@
                 document.getElementById('yt-container').classList.add('hidden');
             } else if (isAllowed && !elLockScreen.classList.contains('hidden')) {
                 elLockScreen.classList.add('hidden');
-                elChildView.classList.remove('hidden');
+                if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                    openYoutubePlayer();
+                } else {
+                    elChildView.classList.remove('hidden');
+                }
             }
         }
 
@@ -1281,6 +1285,7 @@
                 hideOverlay();
                 updateFade();
                 updateClocks();
+                checkSchedule(new Date());
             });
             document.getElementById('btn-reset-color').addEventListener('click', () => {
                 currentSat = 1.0;
@@ -1293,9 +1298,11 @@
                 hideOverlay();
                 updateFade();
                 updateClocks();
+                checkSchedule(new Date());
             });
             document.getElementById('btn-end-session').addEventListener('click', () => {
                 sessionEndTime = Date.now() - 1000;
+                sessionStorage.setItem('fadedown_session_end', sessionEndTime.toString());
                 updateClocks();
                 updateFade();
                 hideOverlay();
