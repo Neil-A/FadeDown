@@ -522,9 +522,9 @@
                 <section>
                     <h3>YouTube Settings</h3>
                     <div class="form-group">
-                        <label>YouTube Data API Key</label>
+                        <label>YouTube API Key <span style="font-weight:400;color:var(--text-secondary);">(optional)</span></label>
                         <input type="text" id="yt-api-key" placeholder="AIza...">
-                        <small style="color:var(--text-secondary); margin-top:0.4rem; display:block;">Get a free key at Google Cloud Console → APIs &amp; Services → YouTube Data API v3. Required to browse channels.</small>
+                        <small style="color:var(--text-secondary); margin-top:0.4rem; display:block;">Without a key: add channels by ID, videos load via RSS. <strong>With a key:</strong> add by @handle, Shorts filtering, and playlist support. Get one free at Google Cloud Console → YouTube Data API v3.</small>
                         <small style="color:var(--text-secondary); margin-top:0.3rem; display:block;">&#128274; <strong>Recommended:</strong> Restrict this key to your site in Google Cloud Console → Credentials → your key → Application restrictions → HTTP referrers. This prevents the key being used if ever stolen.</small>
                     </div>
                     <div class="form-group" style="display:flex;align-items:center;justify-content:space-between;gap:1rem;">
@@ -603,6 +603,8 @@
             youtubeChannels: []
         };
 
+        const CORS_PROXY = 'https://api.allorigins.win/raw?url=';
+
         let config = null;
         let sessionStart = null;
         let sessionEndTime = null;
@@ -662,7 +664,7 @@
             setupEventListeners();
 
             // After loops started, open YouTube if configured; otherwise show welcome page
-            if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+            if (config.youtubeChannels && config.youtubeChannels.length > 0) {
                 openYoutubePlayer();
             } else {
                 elWelcomePage.classList.remove('hidden');
@@ -786,7 +788,7 @@
                 elWelcomePage.classList.add('hidden');
             } else if (isAllowed && !elLockScreen.classList.contains('hidden')) {
                 elLockScreen.classList.add('hidden');
-                if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                if (config.youtubeChannels && config.youtubeChannels.length > 0) {
                     openYoutubePlayer();
                 } else {
                     elWelcomePage.classList.remove('hidden');
@@ -819,10 +821,6 @@
         // --- YouTube Player ---
 
         function openYoutubePlayer() {
-            if (!config.youtubeApiKey) {
-                document.getElementById('child-no-api').classList.remove('hidden');
-                return;
-            }
             document.getElementById('child-no-api').classList.add('hidden');
             elWelcomePage.classList.add('hidden');
             elChildView.classList.add('hidden');
@@ -861,7 +859,7 @@
             const embeddable = await Promise.all(merged.map(v => checkEmbeddable(v.id)));
             let playable = merged.filter((_, i) => embeddable[i]);
 
-            if (config.hideShorts) {
+            if (config.hideShorts && config.youtubeApiKey) {
                 showSkeletons('Filtering Shorts\u2026');
                 const durations = await fetchDurations(playable.map(v => v.id));
                 playable = playable.filter(v => (durations[v.id] || 999) > 60);
@@ -905,6 +903,13 @@
         }
 
         async function fetchChannelVideos(channel) {
+            if (!config.youtubeApiKey) {
+                // No API key — use RSS for regular channels, skip custom playlists
+                if (channel.id && channel.id.startsWith('UC')) {
+                    return await fetchChannelRSS(channel);
+                }
+                return [];
+            }
             if (!channel.uploadsPlaylistId && channel.id && channel.id.startsWith('UC')) {
                 channel.uploadsPlaylistId = 'UU' + channel.id.slice(2);
             }
@@ -923,6 +928,35 @@
                     playlistId: channel.uploadsPlaylistId
                 })).filter(v => v.id && v.title !== 'Private video' && v.title !== 'Deleted video');
             } catch(e) { return []; }
+        }
+
+        async function fetchChannelRSS(channel) {
+            try {
+                const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channel.id}`;
+                const res = await fetch(CORS_PROXY + encodeURIComponent(rssUrl));
+                if (!res.ok) return [];
+                const doc = new DOMParser().parseFromString(await res.text(), 'text/xml');
+                return Array.from(doc.querySelectorAll('entry')).map(entry => {
+                    const videoId = entry.querySelector('videoId')?.textContent;
+                    const title = entry.querySelector('title')?.textContent;
+                    const published = entry.querySelector('published')?.textContent;
+                    const thumbnail = entry.querySelector('thumbnail')?.getAttribute('url')
+                        || `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+                    return {
+                        id: videoId,
+                        title,
+                        thumbnail,
+                        publishedAt: published,
+                        channelId: channel.id,
+                        channelName: channel.name,
+                        channelThumb: channel.thumbnail,
+                        playlistId: null
+                    };
+                }).filter(v => v.id && v.title);
+            } catch(e) {
+                console.warn('RSS fetch failed for', channel.id, e);
+                return [];
+            }
         }
 
         function buildFilterChips() {
@@ -1064,7 +1098,6 @@
             const nameInput = document.getElementById('yt-new-channel-name').value.trim();
             const chInput = document.getElementById('yt-new-channel-input').value.trim();
             if (!chInput) { alert("Please enter a channel ID, @handle, or YouTube URL."); return; }
-            if (!config.youtubeApiKey) { alert("Please enter your YouTube API key first."); return; }
 
             let channelId = null, handle = null;
             if (/^UC[A-Za-z0-9_-]{20,22}$/.test(chInput)) {
@@ -1075,6 +1108,28 @@
                 if (idMatch) channelId = idMatch[1];
                 else if (handleMatch) handle = handleMatch[1];
                 else handle = chInput.replace(/^@/, '');
+            }
+
+            // Without API key: only accept direct UCxxxxxx IDs
+            if (!config.youtubeApiKey) {
+                if (!channelId) {
+                    alert("Without an API key, channels must be added by their channel ID (starts with UC...).\n\nTo find it: open the channel on YouTube → More → Share → Copy channel ID.");
+                    return;
+                }
+                const newCh = {
+                    id: channelId,
+                    name: nameInput || channelId,
+                    uploadsPlaylistId: 'UU' + channelId.slice(2)
+                };
+                if (!config.youtubeChannels) config.youtubeChannels = [];
+                if (config.youtubeChannels.find(c => c.id === newCh.id)) { alert("Channel already added."); return; }
+                config.youtubeChannels.push(newCh);
+                saveConfig();
+                renderYtChannelConfigList();
+                document.getElementById('yt-new-channel-name').value = '';
+                document.getElementById('yt-new-channel-input').value = '';
+                alert(`Added "${newCh.name}"!`);
+                return;
             }
 
             const btn = document.getElementById('btn-add-yt-channel');
@@ -1151,7 +1206,7 @@
             elOverlayContainer.classList.add('hidden');
             stopScanner();
             checkSchedule(new Date());
-            if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+            if (config.youtubeChannels && config.youtubeChannels.length > 0) {
                 elWelcomePage.classList.add('hidden');
             }
         }
@@ -1425,7 +1480,7 @@
             document.getElementById('btn-get-started').addEventListener('click', triggerParentPanel);
 
             document.getElementById('btn-watch-yt').addEventListener('click', () => {
-                if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                if (config.youtubeChannels && config.youtubeChannels.length > 0) {
                     openYoutubePlayer();
                 } else {
                     triggerParentPanel();
