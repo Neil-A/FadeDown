@@ -84,6 +84,81 @@
         .app-icon { font-size: 5rem; margin-bottom: 1.5rem; }
         .app-name { font-size: 1.5rem; font-weight: 800; text-align: center; color: var(--text-color); }
 
+        /* Welcome Page */
+        #welcome-page {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-color);
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 2rem 1.5rem;
+        }
+        #welcome-content {
+            max-width: 480px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 1.2rem;
+            padding: 1rem 0 2rem;
+        }
+        .welcome-logo {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--accent);
+            letter-spacing: -0.02em;
+        }
+        .welcome-headline {
+            font-size: clamp(2rem, 8vw, 2.8rem);
+            font-weight: 900;
+            line-height: 1.1;
+            color: var(--text-color);
+            margin: 0;
+        }
+        .welcome-sub {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            max-width: 380px;
+            margin: 0;
+        }
+        .welcome-features {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            width: 100%;
+            margin: 0.4rem 0;
+        }
+        .welcome-feature {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 0.8rem 1.2rem;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: left;
+            color: var(--text-color);
+        }
+        .welcome-cta {
+            width: 100%;
+            font-size: 1.15rem !important;
+            padding: 1rem !important;
+            border-radius: 14px !important;
+            margin-top: 0.3rem;
+        }
+        .welcome-footer {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            margin: 0;
+        }
+
         /* Back button */
         .back-btn { font-size: 1.2rem; font-weight: 800; padding: 1rem 2rem; border-radius: 50px; border: none; background: var(--accent); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(255,0,0,0.3); }
         .back-btn:active { transform: scale(0.95); }
@@ -254,6 +329,23 @@
             <div id="child-no-api" class="hidden">
                 <p>Ask a parent to set up YouTube in the parent panel.</p>
                 <button id="btn-watch-yt">Watch YouTube 📺</button>
+            </div>
+        </div>
+
+        <!-- Welcome Page -->
+        <div id="welcome-page" class="hidden">
+            <div id="welcome-content">
+                <div class="welcome-logo">▶ FadeTube</div>
+                <h1 class="welcome-headline">YouTube for kids,<br>without the chaos.</h1>
+                <p class="welcome-sub">Curated channels, gentle screen-time limits, and a screen that quietly fades when time is almost up. Set up once — it runs itself.</p>
+                <div class="welcome-features">
+                    <div class="welcome-feature">🎬 &nbsp;Only your approved channels</div>
+                    <div class="welcome-feature">🌅 &nbsp;Screen fades gently as session ends</div>
+                    <div class="welcome-feature">🔒 &nbsp;PIN-protected parent settings</div>
+                    <div class="welcome-feature">📵 &nbsp;No ads with YouTube Premium</div>
+                </div>
+                <button id="btn-get-started" class="primary welcome-cta">Set up for your child →</button>
+                <p class="welcome-footer">fadetube.com &nbsp;·&nbsp; free &nbsp;·&nbsp; no account needed</p>
             </div>
         </div>
 
@@ -540,6 +632,7 @@
         let elChallengeGate;
         let elSetupPanel;
         let elParentPanel;
+        let elWelcomePage;
         let elParentTrigger;
 
         // Load & Initialize
@@ -554,6 +647,7 @@
             elChallengeGate = document.getElementById('challenge-gate');
             elSetupPanel = document.getElementById('setup-panel');
             elParentPanel = document.getElementById('parent-panel');
+            elWelcomePage = document.getElementById('welcome-page');
         }
 
         async function init() {
@@ -564,17 +658,13 @@
             updateUI();
             startLoops();
 
-            if (!config.challengeHash && config.challengeType !== 'math') {
-                showOverlay(elSetupPanel);
-            }
-
             setupEventListeners();
 
-            // After loops started, open YouTube if possible; otherwise show prompt
+            // After loops started, open YouTube if configured; otherwise show welcome page
             if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
                 openYoutubePlayer();
             } else {
-                document.getElementById('child-no-api').classList.remove('hidden');
+                elWelcomePage.classList.remove('hidden');
             }
         }
 
@@ -692,12 +782,13 @@
                 elLockScreen.classList.remove('hidden');
                 elChildView.classList.add('hidden');
                 document.getElementById('yt-container').classList.add('hidden');
+                elWelcomePage.classList.add('hidden');
             } else if (isAllowed && !elLockScreen.classList.contains('hidden')) {
                 elLockScreen.classList.add('hidden');
                 if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
                     openYoutubePlayer();
                 } else {
-                    elChildView.classList.remove('hidden');
+                    elWelcomePage.classList.remove('hidden');
                 }
             }
         }
@@ -732,6 +823,7 @@
                 return;
             }
             document.getElementById('child-no-api').classList.add('hidden');
+            elWelcomePage.classList.add('hidden');
             elChildView.classList.add('hidden');
             document.getElementById('yt-container').classList.remove('hidden');
             loadFeed();
@@ -1058,6 +1150,9 @@
             elOverlayContainer.classList.add('hidden');
             stopScanner();
             checkSchedule(new Date());
+            if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
+                elWelcomePage.classList.add('hidden');
+            }
         }
 
         // --- Challenge Gate ---
@@ -1326,6 +1421,7 @@
 
             // Child view lock button
             document.getElementById('child-lock-btn').addEventListener('click', triggerParentPanel);
+            document.getElementById('btn-get-started').addEventListener('click', triggerParentPanel);
 
             document.getElementById('btn-watch-yt').addEventListener('click', () => {
                 if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
