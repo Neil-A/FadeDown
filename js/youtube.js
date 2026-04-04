@@ -29,7 +29,7 @@
                 const cached = localStorage.getItem(cacheKey);
                 if (cached) {
                     const { videos, ts } = JSON.parse(cached);
-                    if (Date.now() - ts < 3600000) {
+                    if (videos && videos.length > 0 && Date.now() - ts < 3600000) {
                         allFeedVideos = videos;
                         buildFilterChips();
                         renderFeed();
@@ -59,7 +59,9 @@
             playable.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
 
             allFeedVideos = playable;
-            try { localStorage.setItem(cacheKey, JSON.stringify({ videos: playable, ts: Date.now() })); } catch(e) {}
+            if (playable.length > 0) {
+                try { localStorage.setItem(cacheKey, JSON.stringify({ videos: playable, ts: Date.now() })); } catch(e) {}
+            }
             buildFilterChips();
             renderFeed();
         }
