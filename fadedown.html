@@ -325,9 +325,9 @@
             <div class="form-group">
                 <label>Select Challenge Type</label>
                 <select id="setup-challenge-type">
-                    <option value="math">Maths Puzzle (No setup needed)</option>
-                    <option value="pin">PIN (4-6 digits)</option>
+                    <option value="pin" selected>PIN (4-6 digits)</option>
                     <option value="pattern">Pattern</option>
+                    <option value="math">Maths Puzzle (No setup needed)</option>
                 </select>
             </div>
 
@@ -481,7 +481,7 @@
             minSat: 0.2,
             schedule: { start: "09:00", end: "20:00" },
             days: [1, 2, 3, 4, 5],
-            challengeType: "math",
+            challengeType: "pin",
             challengeHash: null,
             youtubeApiKey: '',
             hideShorts: true,
@@ -1014,13 +1014,47 @@
         }
 
         // --- Challenge Gate ---
+        function showChallengeGate() {
+            // Reset inputs
+            currentPinInput = '';
+            currentPattern = [];
+            document.getElementById('pin-display').innerText = '';
+            document.getElementById('math-answer').value = '';
+            document.querySelectorAll('#pattern-challenge .pattern-dot').forEach(d => d.classList.remove('active'));
+
+            // Hide all challenge sections
+            document.getElementById('math-challenge').classList.add('hidden');
+            document.getElementById('pin-challenge').classList.add('hidden');
+            document.getElementById('pattern-challenge').classList.add('hidden');
+            document.getElementById('cooldown-msg').classList.add('hidden');
+
+            // Show correct challenge
+            if (config.challengeType === 'math') {
+                const a = Math.floor(Math.random() * 12) + 1;
+                const b = Math.floor(Math.random() * 12) + 1;
+                currentMathAnswer = a + b;
+                document.getElementById('math-question').innerText = `${a} + ${b} = ?`;
+                document.getElementById('math-challenge').classList.remove('hidden');
+            } else if (config.challengeType === 'pin') {
+                document.getElementById('pin-challenge').classList.remove('hidden');
+            } else if (config.challengeType === 'pattern') {
+                document.getElementById('pattern-challenge').classList.remove('hidden');
+            }
+
+            showOverlay(elChallengeGate);
+        }
+
         function triggerParentPanel() {
             if (Date.now() < cooldownEnd) {
                 alert(`Please wait ${Math.ceil((cooldownEnd - Date.now())/1000)} seconds.`);
                 return;
             }
-
-            openParentPanel();
+            // First-time setup: PIN or pattern selected but no hash stored yet
+            if (!config.challengeHash && config.challengeType !== 'math') {
+                showOverlay(elSetupPanel);
+            } else {
+                showChallengeGate();
+            }
         }
 
         async function verifyChallenge() {
@@ -1372,12 +1406,12 @@
 
             // Setup Listeners
             const setupType = document.getElementById('setup-challenge-type');
-            setupType.addEventListener('change', (e) => {
-                document.getElementById('setup-pin-input-container').classList.add('hidden');
-                document.getElementById('setup-pattern-container').classList.add('hidden');
-                if (e.target.value === 'pin') document.getElementById('setup-pin-input-container').classList.remove('hidden');
-                if (e.target.value === 'pattern') document.getElementById('setup-pattern-container').classList.remove('hidden');
-            });
+            const refreshSetupUI = (val) => {
+                document.getElementById('setup-pin-input-container').classList.toggle('hidden', val !== 'pin');
+                document.getElementById('setup-pattern-container').classList.toggle('hidden', val !== 'pattern');
+            };
+            setupType.addEventListener('change', (e) => refreshSetupUI(e.target.value));
+            refreshSetupUI(setupType.value); // show correct input for default selection
 
             let setupPattern = [];
             document.querySelectorAll('#setup-pattern-grid .pattern-dot').forEach(dot => {
