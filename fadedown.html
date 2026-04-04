@@ -316,6 +316,8 @@
             <div id="cooldown-msg" class="hidden" style="color: var(--danger); text-align: center; font-weight: 800; font-size: 1.2rem; margin-top: 1rem;">
                 Too many attempts. Try again in <span id="cooldown-time">60</span>s.
             </div>
+            <p id="challenge-error" class="hidden" style="color: var(--danger); text-align: center; font-weight: 700; margin-top: 1rem;"></p>
+            <button id="btn-reset-pin" class="hidden" style="width: 100%; margin-top: 1rem; background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); font-size: 0.95rem;">Forgot PIN? Reset now</button>
         </div>
 
         <!-- Initial Setup -->
@@ -1022,11 +1024,13 @@
             document.getElementById('math-answer').value = '';
             document.querySelectorAll('#pattern-challenge .pattern-dot').forEach(d => d.classList.remove('active'));
 
-            // Hide all challenge sections
+            // Hide all challenge sections and reset state
             document.getElementById('math-challenge').classList.add('hidden');
             document.getElementById('pin-challenge').classList.add('hidden');
             document.getElementById('pattern-challenge').classList.add('hidden');
             document.getElementById('cooldown-msg').classList.add('hidden');
+            document.getElementById('challenge-error').classList.add('hidden');
+            document.getElementById('btn-reset-pin').classList.add('hidden');
 
             // Show correct challenge
             if (config.challengeType === 'math') {
@@ -1076,16 +1080,22 @@
                 openParentPanel();
             } else {
                 wrongAttempts++;
+                currentPinInput = '';
+                document.getElementById('pin-display').innerText = '';
+                currentPattern = [];
+                document.querySelectorAll('#pattern-challenge .pattern-dot').forEach(d => d.classList.remove('active'));
+
+                const elErr = document.getElementById('challenge-error');
+                const elReset = document.getElementById('btn-reset-pin');
+                elReset.classList.remove('hidden');
+
                 if (wrongAttempts >= 3) {
                     cooldownEnd = Date.now() + 60000;
-                    hideOverlay();
-                    alert("Too many wrong attempts. Try again in 60 seconds.");
+                    document.getElementById('cooldown-msg').classList.remove('hidden');
+                    elErr.classList.add('hidden');
                 } else {
-                    alert("Incorrect.");
-                    currentPinInput = '';
-                    document.getElementById('pin-display').innerText = '';
-                    currentPattern = [];
-                    document.querySelectorAll('#pattern-challenge .pattern-dot').forEach(d => d.classList.remove('active'));
+                    elErr.innerText = `Incorrect. ${3 - wrongAttempts} attempt${3 - wrongAttempts === 1 ? '' : 's'} remaining.`;
+                    elErr.classList.remove('hidden');
                 }
             }
         }
@@ -1299,6 +1309,13 @@
                 document.getElementById('btn-restore-text-em').addEventListener('click', () => {
                     processRestore(document.getElementById('restore-text-em').value);
                 });
+            });
+
+            // Reset PIN (visible after wrong attempts — bypasses cooldown)
+            document.getElementById('btn-reset-pin').addEventListener('click', () => {
+                wrongAttempts = 0;
+                cooldownEnd = 0;
+                showOverlay(elSetupPanel);
             });
 
             // Closers
