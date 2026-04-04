@@ -2,7 +2,7 @@
   "name": "FadeTube",
   "short_name": "FadeTube",
   "description": "Child screen-time management tool.",
-  "start_url": "./fadedown.html",
+  "start_url": "./app.html",
   "display": "fullscreen",
   "background_color": "#f0f7f4",
   "theme_color": "#4a90e2",
