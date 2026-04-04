@@ -96,8 +96,26 @@
         }
 
         async function fetchChannelVideos(channel) {
+            // Resolve handle → channel ID if not yet resolved
+            if (!channel.id && channel.handle && config.youtubeApiKey) {
+                try {
+                    const handle = channel.handle.replace(/^@/, '');
+                    const res = await fetch(`https://www.googleapis.com/youtube/v3/channels?part=snippet,contentDetails&forHandle=${encodeURIComponent(handle)}&key=${config.youtubeApiKey}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        const ch = data.items && data.items[0];
+                        if (ch) {
+                            channel.id = ch.id;
+                            channel.thumbnail = ch.snippet.thumbnails?.default?.url;
+                            channel.uploadsPlaylistId = ch.contentDetails.relatedPlaylists.uploads;
+                            saveConfig();
+                        }
+                    }
+                } catch(e) {}
+            }
+
             if (!config.youtubeApiKey) {
-                // No API key — use RSS for regular channels, skip custom playlists
+                // No API key — use RSS for regular channels, skip unresolved handles
                 if (channel.id && channel.id.startsWith('UC')) {
                     return await fetchChannelRSS(channel);
                 }

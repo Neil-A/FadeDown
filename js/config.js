@@ -11,18 +11,24 @@
             challengeHash: null,
             youtubeApiKey: '',
             hideShorts: true,
-            youtubeChannels: [
-                { id: 'UCSq2CP0vZ1VfsFiUX6kH7eQ', name: 'Ms. Rachel',         uploadsPlaylistId: 'UUSq2CP0vZ1VfsFiUX6kH7eQ' },
-                { id: 'UCLsooMJoIpl_7ux2jvdPB-Q', name: 'Super Simple Songs',  uploadsPlaylistId: 'UULsooMJoIpl_7ux2jvdPB-Q' },
-                { id: 'UCoookXUzPciGrEZEXmh4Jjg', name: 'Sesame Street',       uploadsPlaylistId: 'UUoookXUzPciGrEZEXmh4Jjg' },
-                { id: 'UCrNnk0wFBnCS1awGjq_ijGQ', name: 'PBS Kids',            uploadsPlaylistId: 'UUrNnk0wFBnCS1awGjq_ijGQ' },
-                { id: 'UC5uIZ2KOZZeQDQo_Gsi_qbQ', name: 'Cosmic Kids Yoga',   uploadsPlaylistId: 'UU5uIZ2KOZZeQDQo_Gsi_qbQ' },
-                { id: 'UCnBdzaRy-Ky9Vh54XJlFz1Q', name: 'Storyline Online',    uploadsPlaylistId: 'UUnBdzaRy-Ky9Vh54XJlFz1Q' },
-                { id: 'UC0SBo61kvjCpvgiHyL6yyxA', name: 'Boey Bear',           uploadsPlaylistId: 'UU0SBo61kvjCpvgiHyL6yyxA' },
-                { id: 'UCDqaC4dlA8Kxnr4ub9xsEZg', name: 'Franklin and Friends', uploadsPlaylistId: 'UUDqaC4dlA8Kxnr4ub9xsEZg' },
-                { id: 'UCF1cT4lrjaiGgWcUXUwD6EQ', name: 'Little Bear',         uploadsPlaylistId: 'UUF1cT4lrjaiGgWcUXUwD6EQ' }
-            ]
+            youtubeChannels: []
         };
+
+        const DEFAULT_CHANNELS = [
+            { name: "Ms. Rachel – Songs for Littles", handle: "@SongsforLittles" },
+            { name: "Little Bear",                    handle: "@LittleBearOfficial" },
+            { name: "Storyline Online",               handle: "@StorylineOnline" },
+            { name: "Puffin Rock",                    handle: "@PuffinRock" },
+            { name: "Tumble Leaf",                    handle: "@TumbleLeaf" },
+            { name: "Super Simple Songs",             handle: "@supersimplesongs" },
+            { name: "Daniel Tiger's Neighborhood",    handle: "@DanielTigersNeighborhood" },
+            { name: "Sesame Street",                  handle: "@SesameStreet" },
+            { name: "PBS Kids",                       handle: "@pbskids" },
+            { name: "Boey Bear",                      handle: "@boeybear" },
+            { name: "Trash Truck",                    handle: "@TrashTruck" },
+            { name: "Franklin",                       handle: "@FranklinAndFriends" },
+            { name: "Cosmic Kids Yoga",               handle: "@cosmickidsyoga" }
+        ];
 
         // Each proxy: [proxyUrl, encodeUrl]
         const CORS_PROXIES = [
@@ -48,7 +54,7 @@
                     // Add new config fields if missing
                     if (config.youtubeApiKey === undefined) config.youtubeApiKey = '';
                     if (config.hideShorts === undefined) config.hideShorts = true;
-                    if (!config.youtubeChannels) config.youtubeChannels = [];
+                    if (!config.youtubeChannels || config.youtubeChannels.length === 0) config.youtubeChannels = DEFAULT_CHANNELS.map(c => Object.assign({}, c));
                     if (!config.schedule) config.schedule = { start: '00:00', end: '24:00' };
                     if (!config.days || config.days.length === 0) config.days = [0,1,2,3,4,5,6];
                     // Migrate old "23:59" end to "24:00" so late-night access works
@@ -57,10 +63,12 @@
                     saveConfig();
                 } else {
                     config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+                    config.youtubeChannels = DEFAULT_CHANNELS.map(c => Object.assign({}, c));
                     saveConfig();
                 }
             } catch (e) {
                 config = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+                config.youtubeChannels = DEFAULT_CHANNELS.map(c => Object.assign({}, c));
             }
         }
 
