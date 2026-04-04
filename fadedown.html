@@ -170,6 +170,25 @@
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
         }
+        .yt-back-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            font-size: 1.05rem;
+            font-weight: 800;
+            padding: 0.55rem 1.3rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: var(--font-main);
+            transition: background 0.15s, opacity 0.2s;
+            white-space: nowrap;
+        }
+        .yt-back-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+        .yt-back-btn:not(:disabled):active { background: var(--bg-secondary); transform: scale(0.96); }
+
         .yt-unmute-btn {
             background: var(--bg-tertiary);
             color: var(--text-color);
@@ -258,7 +277,7 @@
                     <p style="margin-top:0.5rem;color:var(--text-secondary);">The video owner has disabled embedding.</p>
                 </div>
                 <div class="yt-player-bar">
-                    <button id="yt-player-back-btn" class="yt-icon-btn">← Back</button>
+                    <button id="yt-player-back-btn" class="yt-back-btn">← Back</button>
                     <button id="yt-unmute-btn" class="yt-unmute-btn">🔇 Tap to Unmute</button>
                 </div>
                 <iframe id="yt-frame" style="flex:1;border:none;width:100%;height:100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -503,6 +522,7 @@
         let currentPattern = [];
 
         let scanStream = null;
+        let backBtnTimer = null;
 
         // Feed state
         let allFeedVideos = [];
@@ -871,6 +891,24 @@
             document.getElementById('yt-player-view').classList.remove('hidden');
             document.getElementById('yt-player-error').classList.add('hidden');
             document.getElementById('yt-frame').classList.remove('hidden');
+
+            // Lock back button for 30 seconds
+            if (backBtnTimer) clearInterval(backBtnTimer);
+            const backBtn = document.getElementById('yt-player-back-btn');
+            backBtn.disabled = true;
+            let secsLeft = 30;
+            backBtn.textContent = `← ${secsLeft}s`;
+            backBtnTimer = setInterval(() => {
+                secsLeft--;
+                if (secsLeft <= 0) {
+                    clearInterval(backBtnTimer);
+                    backBtnTimer = null;
+                    backBtn.disabled = false;
+                    backBtn.textContent = '← Back';
+                } else {
+                    backBtn.textContent = `← ${secsLeft}s`;
+                }
+            }, 1000);
             const unmuteBtn = document.getElementById('yt-unmute-btn');
             unmuteBtn.textContent = '🔇 Tap to Unmute';
             unmuteBtn.className = 'yt-unmute-btn muted';
@@ -1263,6 +1301,7 @@
 
             // Player back button
             document.getElementById('yt-player-back-btn').addEventListener('click', () => {
+                if (backBtnTimer) { clearInterval(backBtnTimer); backBtnTimer = null; }
                 document.getElementById('yt-frame').src = '';
                 document.getElementById('yt-player-view').classList.add('hidden');
                 document.getElementById('yt-feed-view').classList.remove('hidden');
