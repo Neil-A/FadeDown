@@ -485,13 +485,7 @@
             challengeHash: null,
             youtubeApiKey: '',
             hideShorts: true,
-            youtubeChannels: [
-                { id: 'UCbCmjCuTUZos6Inko4u57UQ', name: 'Cocomelon', thumbnail: '', uploadsPlaylistId: 'UUbCmjCuTUZos6Inko4u57UQ' },
-                { id: 'UC-Gm4EN7nNNR3k67J8ydKzA', name: 'Blippi', thumbnail: '', uploadsPlaylistId: 'UU-Gm4EN7nNNR3k67J8ydKzA' },
-                { id: 'UCYhG8MAzgKy4OjBTYrpKXmg', name: 'PBS Kids', thumbnail: '', uploadsPlaylistId: 'UUYhG8MAzgKy4OjBTYrpKXmg' },
-                { id: 'UCiMXUJ-R6B5Gfh9b_0AxQmQ', name: 'Super Simple Songs', thumbnail: '', uploadsPlaylistId: 'UUiMXUJ-R6B5Gfh9b_0AxQmQ' },
-                { id: 'UCKVmv8K9FYH-JZ2pV9UKbEQ', name: 'Sesame Street', thumbnail: '', uploadsPlaylistId: 'UUKVmv8K9FYH-JZ2pV9UKbEQ' }
-            ]
+            youtubeChannels: []
         };
 
         let config = null;
@@ -571,18 +565,6 @@
                     if (config.youtubeApiKey === undefined) config.youtubeApiKey = '';
                     if (config.hideShorts === undefined) config.hideShorts = true;
                     if (!config.youtubeChannels) config.youtubeChannels = [];
-
-                    // Add any missing default kids channels to existing config
-                    (DEFAULT_CONFIG.youtubeChannels || []).forEach(def => {
-                        if (!config.youtubeChannels.find(c => c.id === def.id)) {
-                            config.youtubeChannels.push(JSON.parse(JSON.stringify(def)));
-                        }
-                    });
-
-                    // If still empty, load all defaults
-                    if (config.youtubeChannels.length === 0) {
-                        config.youtubeChannels = JSON.parse(JSON.stringify(DEFAULT_CONFIG.youtubeChannels));
-                    }
 
                     saveConfig();
                 } else {
