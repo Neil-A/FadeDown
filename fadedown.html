@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FadeDown</title>
     <link rel="manifest" href="manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
@@ -10,13 +10,17 @@
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <style>
         :root {
-            --bg-color: #f0f7f4;
-            --text-color: #333;
-            --tile-bg: #ffffff;
-            --tile-shadow: rgba(0,0,0,0.08);
-            --accent: #4a90e2;
+            --bg-color: #0f0f0f;
+            --bg-secondary: #1f1f1f;
+            --bg-tertiary: #272727;
+            --text-color: #f1f1f1;
+            --text-secondary: #aaaaaa;
+            --tile-bg: #1f1f1f;
+            --tile-shadow: rgba(0,0,0,0.4);
+            --accent: #ff0000;
             --danger: #e74c3c;
             --success: #2ecc71;
+            --border-color: #3f3f3f;
             --font-main: 'Nunito', sans-serif;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; -webkit-user-select: none; }
@@ -35,8 +39,8 @@
         /* Child View */
         #child-view { flex: 1; display: flex; flex-direction: column; padding: 1rem 1.2rem; position: relative; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
-        .clock { font-size: 2rem; font-weight: 900; color: #555; }
-        .session-timer { font-size: 1rem; font-weight: 700; color: #777; }
+        .clock { font-size: 2rem; font-weight: 900; color: var(--text-color); }
+        .session-timer { font-size: 1rem; font-weight: 700; color: var(--text-secondary); }
 
         /* Child view no-api message */
         #child-no-api {
@@ -52,7 +56,7 @@
         #child-no-api p {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #777;
+            color: var(--text-secondary);
             line-height: 1.5;
         }
         #btn-watch-yt {
@@ -64,100 +68,137 @@
             border: none;
             font-weight: 900;
             cursor: pointer;
-            box-shadow: 0 8px 20px rgba(74,144,226,0.3);
+            box-shadow: 0 8px 20px rgba(255,0,0,0.3);
         }
         #btn-watch-yt:active { transform: scale(0.96); }
 
         .app-tile { background: var(--tile-bg); border-radius: 32px; padding: 2rem; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 25px var(--tile-shadow); transition: transform 0.2s, box-shadow 0.2s; min-height: 200px; }
         .app-tile:active { transform: scale(0.96); box-shadow: 0 5px 15px var(--tile-shadow); }
         .app-icon { font-size: 5rem; margin-bottom: 1.5rem; }
-        .app-name { font-size: 1.5rem; font-weight: 800; text-align: center; color: #444; }
+        .app-name { font-size: 1.5rem; font-weight: 800; text-align: center; color: var(--text-color); }
 
         /* Back button */
-        .back-btn { font-size: 1.2rem; font-weight: 800; padding: 1rem 2rem; border-radius: 50px; border: none; background: var(--accent); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(74,144,226,0.3); }
+        .back-btn { font-size: 1.2rem; font-weight: 800; padding: 1rem 2rem; border-radius: 50px; border: none; background: var(--accent); color: white; cursor: pointer; box-shadow: 0 4px 12px rgba(255,0,0,0.3); }
         .back-btn:active { transform: scale(0.95); }
-        .iframe-header { display: flex; padding: 1rem 2rem; background: #f8f9fa; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.1); z-index: 101; }
+        .iframe-header { display: flex; padding: 1rem 2rem; background: var(--bg-secondary); align-items: center; box-shadow: 0 1px 0 var(--border-color); z-index: 101; }
 
         /* Lock Screen */
         #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; }
         .lock-icon { font-size: 8rem; margin-bottom: 2rem; }
-        .lock-msg { font-size: 3rem; font-weight: 900; color: #555; margin-bottom: 1rem; }
-        .lock-sub { font-size: 1.8rem; color: #777; font-weight: 700; }
+        .lock-msg { font-size: 3rem; font-weight: 900; color: var(--text-color); margin-bottom: 1rem; }
+        .lock-sub { font-size: 1.8rem; color: var(--text-secondary); font-weight: 700; }
 
         /* Parent Trigger */
         #parent-trigger { position: absolute; top: 0; right: 0; width: 120px; height: 120px; z-index: 250; cursor: pointer; pointer-events: auto; }
 
         /* Overlay & Panels */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 300; display: flex; justify-content: center; align-items: center; padding: 1rem; user-select: auto; -webkit-user-select: auto; }
-        .panel { background: #fff; border-radius: 24px; width: 100%; max-width: 650px; padding: 1.5rem; display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; }
-        .panel-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2.5rem; cursor: pointer; border: none; background: none; color: #aaa; line-height: 1; }
+        .panel { background: var(--bg-secondary); border-radius: 24px; width: 100%; max-width: 650px; padding: 1.5rem; display: flex; flex-direction: column; position: relative; max-height: 90vh; overflow-y: auto; }
+        .panel-close { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 2.5rem; cursor: pointer; border: none; background: none; color: var(--text-secondary); line-height: 1; }
 
         /* Forms */
-        h2 { margin-bottom: 1.5rem; font-size: 2rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; color: #333; }
-        h3 { margin: 2rem 0 1rem; font-size: 1.4rem; color: #444; }
+        h2 { margin-bottom: 1.5rem; font-size: 2rem; border-bottom: 2px solid var(--border-color); padding-bottom: 0.5rem; color: var(--text-color); }
+        h3 { margin: 2rem 0 1rem; font-size: 1.4rem; color: var(--text-color); }
         .form-group { margin-bottom: 1.5rem; }
-        label { display: block; font-weight: 800; margin-bottom: 0.5rem; color: #555; }
-        input[type="number"], input[type="text"], input[type="time"], input[type="password"], select, textarea { width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 12px; font-family: var(--font-main); font-size: 1.1rem; }
+        label { display: block; font-weight: 800; margin-bottom: 0.5rem; color: var(--text-secondary); }
+        input[type="number"], input[type="text"], input[type="time"], input[type="password"], select, textarea { width: 100%; padding: 1rem; border: 2px solid var(--border-color); border-radius: 12px; font-family: var(--font-main); font-size: 1.1rem; background: var(--bg-tertiary); color: var(--text-color); }
         input[type="range"] { width: 100%; margin: 1rem 0; }
 
-        button { padding: 1rem 2rem; border: none; border-radius: 12px; font-family: var(--font-main); font-size: 1.1rem; font-weight: 800; cursor: pointer; background: #e0e0e0; color: #333; transition: opacity 0.2s; }
+        button { padding: 1rem 2rem; border: none; border-radius: 12px; font-family: var(--font-main); font-size: 1.1rem; font-weight: 800; cursor: pointer; background: var(--bg-tertiary); color: var(--text-color); transition: opacity 0.2s; }
         button:active { opacity: 0.8; }
         button.primary { background: var(--accent); color: white; }
         button.danger { background: var(--danger); color: white; }
 
         .flex-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; }
-        .day-toggle { width: 48px; height: 48px; border-radius: 50%; border: 2px solid #ccc; display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; font-size: 1.1rem; color: #777; }
+        .day-toggle { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; cursor: pointer; font-weight: 800; font-size: 1.1rem; color: var(--text-secondary); }
         .day-toggle.active { background: var(--accent); color: white; border-color: var(--accent); }
 
-        .app-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 2px solid #eee; border-radius: 12px; margin-bottom: 0.8rem; background: #fafafa; }
+        .app-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 2px solid var(--border-color); border-radius: 12px; margin-bottom: 0.8rem; background: var(--bg-tertiary); }
 
-        #yt-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; z-index: 100; display: flex; flex-direction: column; }
-        #yt-channels-view, #yt-videos-view { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        /* YouTube Container */
+        #yt-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 100; display: flex; flex-direction: column; }
+
+        /* YouTube Top Bar */
+        .yt-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.8rem 1rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .yt-logo { font-size: 1.3rem; font-weight: 900; color: var(--accent); letter-spacing: -0.02em; }
+        .yt-topbar-right { display: flex; gap: 0.5rem; align-items: center; }
+        .yt-icon-btn { background: none; border: none; color: var(--text-color); font-size: 1.4rem; padding: 0.5rem; border-radius: 50%; cursor: pointer; line-height: 1; transition: background 0.15s; font-family: var(--font-main); font-weight: 800; }
+        .yt-icon-btn:active { background: var(--bg-tertiary); }
+        .yt-filter-bar { display: flex; gap: 0.5rem; padding: 0.6rem 0.8rem; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; flex-shrink: 0; background: var(--bg-color); border-bottom: 1px solid var(--border-color); }
+        .yt-filter-bar::-webkit-scrollbar { display: none; }
+        .yt-chip { flex-shrink: 0; padding: 0.4rem 0.9rem; border-radius: 20px; background: var(--bg-tertiary); color: var(--text-color); font-size: 0.85rem; font-weight: 700; cursor: pointer; white-space: nowrap; border: 1px solid var(--border-color); font-family: var(--font-main); }
+        .yt-chip.active { background: var(--text-color); color: var(--bg-color); border-color: var(--text-color); }
+
+        /* Feed */
+        .yt-feed { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #yt-feed-grid { display: flex; flex-direction: column; }
+
+        /* Skeleton loading cards */
+        .yt-skeleton { border-bottom: 1px solid var(--border-color); }
+        .yt-skeleton-thumb { width: 100%; aspect-ratio: 16/9; background: var(--bg-tertiary); animation: shimmer 1.5s infinite; }
+        .yt-skeleton-meta { display: flex; gap: 0.8rem; padding: 0.8rem 1rem 1rem; }
+        .yt-skeleton-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--bg-tertiary); flex-shrink: 0; animation: shimmer 1.5s infinite; }
+        .yt-skeleton-text { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+        .yt-skeleton-line { height: 14px; border-radius: 4px; background: var(--bg-tertiary); animation: shimmer 1.5s infinite; }
+        .yt-skeleton-line.short { width: 50%; }
+        @keyframes shimmer { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        /* Player view */
         #yt-player-view { flex: 1; display: flex; flex-direction: column; }
-        #yt-video-grid { display: flex; flex-direction: column; gap: 0; padding: 0; }
-        .yt-video-tile { background: #fff; cursor: pointer; transition: background 0.15s; border-bottom: 1px solid #f0f0f0; }
-        .yt-video-tile:active { background: #f5f5f5; }
+        .yt-player-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.6rem 1rem;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+        .yt-unmute-btn {
+            background: var(--bg-tertiary);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 0.4rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: var(--font-main);
+        }
+        .yt-unmute-btn.unmuted { opacity: 0.4; }
+
+        /* Video tiles */
+        .yt-video-tile { background: var(--bg-color); cursor: pointer; transition: background 0.15s; border-bottom: 1px solid var(--border-color); }
+        .yt-video-tile:active { background: var(--bg-secondary); }
         .yt-video-tile .yt-thumb-wrap { position: relative; width: 100%; aspect-ratio: 16/9; background: #111; overflow: hidden; }
         .yt-video-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .yt-video-tile .yt-meta { display: flex; gap: 0.8rem; padding: 0.8rem 1rem 1rem; align-items: flex-start; }
         .yt-video-tile .yt-channel-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--accent); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 1rem; color: white; font-weight: 800; overflow: hidden; }
         .yt-video-tile .yt-channel-icon img { width: 100%; height: 100%; object-fit: cover; }
         .yt-video-tile .yt-text { flex: 1; }
-        .yt-video-tile .yt-title { font-size: 1rem; font-weight: 700; color: #0f0f0f; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.25rem; }
-        .yt-video-tile .yt-channel-name { font-size: 0.85rem; color: #606060; font-weight: 600; }
+        .yt-video-tile .yt-title { font-size: 1rem; font-weight: 700; color: var(--text-color); line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 0.25rem; }
+        .yt-video-tile .yt-channel-name { font-size: 0.85rem; color: var(--text-secondary); font-weight: 600; }
 
-        /* Channel grid: compact 2-col on mobile */
-        #yt-channel-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            padding: 1rem;
-        }
-        #yt-channel-grid .app-tile {
-            min-height: 120px;
-            padding: 1rem;
-            border-radius: 20px;
-        }
-        #yt-channel-grid .app-tile .app-icon {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-        }
-        #yt-channel-grid .app-tile .app-name {
-            font-size: 1rem;
-        }
-
-        #qr-container { display: flex; justify-content: center; margin: 1.5rem 0; padding: 1rem; background: white; border-radius: 12px; }
+        #qr-container { display: flex; justify-content: center; margin: 1.5rem 0; padding: 1rem; background: var(--bg-secondary); border-radius: 12px; }
         #video-container { width: 100%; max-width: 400px; margin: 0 auto; position: relative; border-radius: 12px; overflow: hidden; }
         #qr-video { width: 100%; background: #000; display: block; }
 
         /* Pin / Challenge */
         .keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 300px; margin: 0 auto; }
-        .key { padding: 20px; font-size: 1.8rem; border-radius: 16px; border: none; background: #f0f0f0; cursor: pointer; font-weight: 800; color: #444; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .key { padding: 20px; font-size: 1.8rem; border-radius: 16px; border: none; background: var(--bg-tertiary); cursor: pointer; font-weight: 800; color: var(--text-color); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .key:active { transform: scale(0.95); }
-        .pin-display { font-size: 2.5rem; text-align: center; letter-spacing: 0.8rem; margin-bottom: 1.5rem; min-height: 60px; font-weight: 900; color: #333; }
+        .pin-display { font-size: 2.5rem; text-align: center; letter-spacing: 0.8rem; margin-bottom: 1.5rem; min-height: 60px; font-weight: 900; color: var(--text-color); }
 
         .pattern-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; max-width: 250px; margin: 0 auto; }
-        .pattern-dot { width: 60px; height: 60px; border-radius: 50%; background: #e0e0e0; margin: auto; cursor: pointer; }
+        .pattern-dot { width: 60px; height: 60px; border-radius: 50%; background: var(--bg-tertiary); margin: auto; cursor: pointer; }
         .pattern-dot.active { background: var(--accent); }
 
         @media print {
@@ -175,9 +216,12 @@
             <div id="parent-trigger"></div>
             <div class="header">
                 <div class="session-timer" id="session-timer-display">Loading...</div>
-                <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
-                    <div class="clock" id="clock-display">00:00</div>
-                    <div style="font-size:0.6rem;color:#ccc;font-weight:600;letter-spacing:0.05em;">v1.2.0</div>
+                <div style="display:flex;align-items:center;gap:0.8rem;">
+                    <button id="child-lock-btn" style="background:none;border:none;font-size:1.5rem;cursor:pointer;padding:0.3rem;">🔒</button>
+                    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:0.2rem;">
+                        <div class="clock" id="clock-display">00:00</div>
+                        <div style="font-size:0.6rem;color:var(--text-secondary);font-weight:600;letter-spacing:0.05em;">v1.3.0</div>
+                    </div>
                 </div>
             </div>
             <div id="child-no-api" class="hidden">
@@ -188,23 +232,28 @@
 
         <!-- YouTube Player -->
         <div id="yt-container" class="hidden">
-            <div class="iframe-header">
-                <button class="back-btn" id="yt-back-btn">← Back</button>
-                <span id="yt-header-title" style="font-size:1.2rem; font-weight:800; margin-left:1rem; color:#444;"></span>
+            <div class="yt-topbar">
+                <span class="yt-logo">▶ FadeDown</span>
+                <div class="yt-topbar-right">
+                    <button id="yt-refresh-btn" class="yt-icon-btn" title="Refresh">↺</button>
+                    <button id="yt-lock-btn" class="yt-icon-btn" title="Parent Settings">🔒</button>
+                </div>
             </div>
-            <div id="yt-channels-view">
-                <div id="yt-channel-grid"></div>
-            </div>
-            <div id="yt-videos-view" class="hidden">
-                <div id="yt-video-grid"></div>
+            <div id="yt-filter-bar" class="yt-filter-bar"></div>
+            <div id="yt-feed-view" class="yt-feed">
+                <div id="yt-feed-grid"></div>
             </div>
             <div id="yt-player-view" class="hidden">
-                <div id="yt-player-error" class="hidden" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;background:#f8f9fa;">
+                <div id="yt-player-error" class="hidden" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;">
                     <div style="font-size:4rem;margin-bottom:1rem;">😕</div>
-                    <p style="font-size:1.3rem;font-weight:800;color:#555;">This video can't be played here.</p>
-                    <p style="color:#888;margin-top:0.5rem;">The video owner has disabled embedding. Try a different video.</p>
+                    <p style="font-size:1.3rem;font-weight:800;">This video can't be played here.</p>
+                    <p style="margin-top:0.5rem;color:var(--text-secondary);">The video owner has disabled embedding.</p>
                 </div>
-                <iframe id="yt-frame" style="flex:1; border:none; width:100%; height:100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <div class="yt-player-bar">
+                    <button id="yt-player-back-btn" class="yt-icon-btn">← Back</button>
+                    <button id="yt-unmute-btn" class="yt-unmute-btn">🔇 Tap to Unmute</button>
+                </div>
+                <iframe id="yt-frame" style="flex:1;border:none;width:100%;height:100%;" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
         </div>
 
@@ -214,9 +263,9 @@
             <div class="lock-msg" id="lock-msg">Screen time starts at 9am!</div>
             <div class="lock-sub" id="lock-sub">Time to rest your eyes.</div>
             <div class="clock" id="lock-clock-display" style="margin-top: 2rem;">00:00</div>
-            <div style="margin-top: 1rem; color: #999; font-size: 0.95rem; max-width: 320px;">Parent access: long-press top-right corner for 1.5s to unlock.</div>
-            <button id="unlock-btn" style="margin-top:1rem; padding:0.8rem 1.2rem; border:none; border-radius:10px; background:#4a90e2; color:#fff; font-weight:700; cursor:pointer;">Unlock</button>
-            <a href="#" id="restore-link" style="margin-top: 1rem; color: #ccc; text-decoration: none; font-size: 0.9rem; z-index: 250; position: relative;">Restore Settings</a>
+            <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.95rem; max-width: 320px;">Parent access: long-press top-right corner for 1.5s to unlock.</div>
+            <button id="unlock-btn" style="margin-top:1rem; padding:0.8rem 1.2rem; border:none; border-radius:10px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer;">Unlock</button>
+            <a href="#" id="restore-link" style="margin-top: 1rem; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; z-index: 250; position: relative;">Restore Settings</a>
         </div>
     </div>
 
@@ -227,7 +276,7 @@
         <div id="challenge-gate" class="panel hidden">
             <button class="panel-close" id="close-challenge">&times;</button>
             <h2>Parent Access</h2>
-            <p id="challenge-msg" style="margin-bottom: 1rem; color: #555; font-weight: 700;">Please solve to continue.</p>
+            <p id="challenge-msg" style="margin-bottom: 1rem; color: var(--text-secondary); font-weight: 700;">Please solve to continue.</p>
 
             <div id="math-challenge" class="hidden">
                 <div style="font-size: 2.5rem; text-align: center; margin-bottom: 1.5rem; font-weight: 900;" id="math-question"></div>
@@ -241,7 +290,7 @@
                     <button class="key" data-val="1">1</button><button class="key" data-val="2">2</button><button class="key" data-val="3">3</button>
                     <button class="key" data-val="4">4</button><button class="key" data-val="5">5</button><button class="key" data-val="6">6</button>
                     <button class="key" data-val="7">7</button><button class="key" data-val="8">8</button><button class="key" data-val="9">9</button>
-                    <button class="key" data-val="C" style="background: #ffd5d5;">C</button><button class="key" data-val="0">0</button><button class="key" data-val="OK" style="background: #d5ffd5;">OK</button>
+                    <button class="key" data-val="C" style="background: #3a1515;">C</button><button class="key" data-val="0">0</button><button class="key" data-val="OK" style="background: #153a1e;">OK</button>
                 </div>
             </div>
 
@@ -299,7 +348,7 @@
                 <!-- Active Session -->
                 <section>
                     <h3>Active Session</h3>
-                    <p style="font-weight: 800; color: #555;">Current Saturation: <span id="current-sat-display">100%</span></p>
+                    <p style="font-weight: 800; color: var(--text-secondary);">Current Saturation: <span id="current-sat-display">100%</span></p>
                     <div class="flex-row" style="margin-top: 1rem;">
                         <button id="btn-add-time" class="primary">+15 mins</button>
                         <button id="btn-reset-color">Reset Color</button>
@@ -352,18 +401,18 @@
                     <div class="form-group">
                         <label>YouTube Data API Key</label>
                         <input type="text" id="yt-api-key" placeholder="AIza...">
-                        <small style="color:#888; margin-top:0.4rem; display:block;">Get a free key at Google Cloud Console (YouTube Data API v3). Required to browse channels.</small>
+                        <small style="color:var(--text-secondary); margin-top:0.4rem; display:block;">Get a free key at Google Cloud Console (YouTube Data API v3). Required to browse channels.</small>
                     </div>
-                    <h4 style="margin:1rem 0 0.5rem;">Allowed Channels</h4>
+                    <h4 style="margin:1rem 0 0.5rem; color:var(--text-color);">Allowed Channels</h4>
                     <div id="yt-channel-config-list"></div>
-                    <div style="margin-top:1rem; padding:1.5rem; background:#f0f0f0; border-radius:12px;">
-                        <h4 style="margin-bottom:0.8rem;">Add Channel</h4>
+                    <div style="margin-top:1rem; padding:1.5rem; background:var(--bg-tertiary); border-radius:12px;">
+                        <h4 style="margin-bottom:0.8rem; color:var(--text-color);">Add Channel</h4>
                         <input type="text" id="yt-new-channel-name" placeholder="Display name (e.g. Blippi)" style="margin-bottom:0.8rem;">
                         <input type="text" id="yt-new-channel-input" placeholder="Channel ID, @handle, or YouTube URL" style="margin-bottom:1rem;">
                         <button id="btn-add-yt-channel" class="primary" style="width:100%;">Add Channel</button>
                     </div>
-                    <div style="margin-top:1rem; padding:1.5rem; background:#f0f0f0; border-radius:12px;">
-                        <h4 style="margin-bottom:0.8rem;">Add Playlist as Channel</h4>
+                    <div style="margin-top:1rem; padding:1.5rem; background:var(--bg-tertiary); border-radius:12px;">
+                        <h4 style="margin-bottom:0.8rem; color:var(--text-color);">Add Playlist as Channel</h4>
                         <input type="text" id="yt-playlist-name" placeholder="Display name (e.g. Kids Favorites)" style="margin-bottom:0.8rem;">
                         <input type="text" id="yt-playlist-url" placeholder="YouTube playlist URL" style="margin-bottom:1rem;">
                         <button id="btn-add-yt-playlist" class="primary" style="width:100%;">Add Playlist as Channel</button>
@@ -373,7 +422,7 @@
                 <!-- Challenge Settings -->
                 <section>
                     <h3>Challenge Settings</h3>
-                    <p>Current Type: <strong id="current-challenge-type-label">Maths</strong></p>
+                    <p style="color:var(--text-color);">Current Type: <strong id="current-challenge-type-label">Maths</strong></p>
                     <button id="btn-change-challenge" style="margin-top: 0.5rem;">Change Challenge Type</button>
                 </section>
 
@@ -384,11 +433,11 @@
                     <div id="qr-container" class="hidden"></div>
                     <button id="btn-print-qr" class="hidden" style="margin-top: 0.5rem; width: 100%;">Print QR Code</button>
 
-                    <h4 style="margin-top: 2rem;">Restore from Backup</h4>
+                    <h4 style="margin-top: 2rem; color:var(--text-color);">Restore from Backup</h4>
                     <button id="btn-scan-qr">Scan QR Code</button>
                     <div id="video-container" class="hidden" style="margin-top: 1rem;">
                         <video id="qr-video" playsinline></video>
-                        <p style="text-align: center; margin-top: 0.5rem; font-weight: bold;">Point camera at QR code</p>
+                        <p style="text-align: center; margin-top: 0.5rem; font-weight: bold; color:var(--text-color);">Point camera at QR code</p>
                         <button id="btn-stop-scan" style="width: 100%; margin-top: 0.5rem;" class="danger">Cancel Scan</button>
                     </div>
                     <div style="margin-top: 1rem;">
@@ -401,7 +450,7 @@
                 <!-- About -->
                 <section style="margin-bottom: 2rem;">
                     <h3>About</h3>
-                    <p style="font-size: 1rem; color: #666; margin-bottom: 1rem; line-height: 1.5;">FadeDown runs entirely on your device. No servers, no tracking, no ads. Settings are stored locally in your browser.</p>
+                    <p style="font-size: 1rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.5;">FadeDown runs entirely on your device. No servers, no tracking, no ads. Settings are stored locally in your browser.</p>
                     <a href="https://buymeacoffee.com" target="_blank" style="display: inline-block; background: #ff813f; color: white; padding: 0.8rem 1.5rem; border-radius: 12px; text-decoration: none; font-weight: 800;">☕ Buy Me a Coffee</a>
                 </section>
 
@@ -444,6 +493,10 @@
         let currentPattern = [];
 
         let scanStream = null;
+
+        // Feed state
+        let allFeedVideos = [];
+        let activeFilter = 'all';
 
         // Elements - declared as let to assign after DOM ready
         let elAppContainer;
@@ -642,42 +695,133 @@
         }
 
         // --- YouTube Player ---
-        let currentYtChannel = null;
 
         function openYoutubePlayer() {
             if (!config.youtubeApiKey) {
                 document.getElementById('child-no-api').classList.remove('hidden');
                 return;
             }
-            if (!config.youtubeChannels || config.youtubeChannels.length === 0) {
-                document.getElementById('child-no-api').classList.remove('hidden');
-                return;
-            }
             document.getElementById('child-no-api').classList.add('hidden');
             elChildView.classList.add('hidden');
             document.getElementById('yt-container').classList.remove('hidden');
-            showYtChannels();
+            loadFeed();
         }
 
-        function showYtChannels() {
-            currentYtChannel = null;
-            document.getElementById('yt-channels-view').classList.remove('hidden');
-            document.getElementById('yt-videos-view').classList.add('hidden');
+        async function loadFeed(filterChannelId) {
+            if (filterChannelId !== undefined) activeFilter = filterChannelId;
             document.getElementById('yt-player-view').classList.add('hidden');
-            document.getElementById('yt-back-btn').classList.add('hidden');
-            document.getElementById('yt-header-title').innerText = 'Choose a Channel';
-            const grid = document.getElementById('yt-channel-grid');
+            document.getElementById('yt-feed-view').classList.remove('hidden');
+            updateChips();
+
+            if (allFeedVideos.length > 0) { renderFeed(); return; }
+
+            showSkeletons();
+
+            const cacheKey = 'yt_feed_cache';
+            try {
+                const cached = localStorage.getItem(cacheKey);
+                if (cached) {
+                    const { videos, ts } = JSON.parse(cached);
+                    if (Date.now() - ts < 3600000) {
+                        allFeedVideos = videos;
+                        buildFilterChips();
+                        renderFeed();
+                        return;
+                    }
+                }
+            } catch(e) {}
+
+            const results = await Promise.all((config.youtubeChannels || []).map(ch => fetchChannelVideos(ch)));
+            const merged = results.flat();
+
+            showSkeletons('Checking videos\u2026');
+            const embeddable = await Promise.all(merged.map(v => checkEmbeddable(v.id)));
+            const playable = merged.filter((_, i) => embeddable[i]);
+            playable.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+
+            allFeedVideos = playable;
+            try { localStorage.setItem(cacheKey, JSON.stringify({ videos: playable, ts: Date.now() })); } catch(e) {}
+            buildFilterChips();
+            renderFeed();
+        }
+
+        function showSkeletons(msg) {
+            const grid = document.getElementById('yt-feed-grid');
+            const skeletonHtml = Array(5).fill(0).map(() => `<div class="yt-skeleton"><div class="yt-skeleton-thumb"></div><div class="yt-skeleton-meta"><div class="yt-skeleton-icon"></div><div class="yt-skeleton-text"><div class="yt-skeleton-line"></div><div class="yt-skeleton-line short"></div></div></div></div>`).join('');
+            grid.innerHTML = (msg ? `<div style="padding:0.8rem 1rem;color:var(--text-secondary);font-size:0.85rem;">${msg}</div>` : '') + skeletonHtml;
+        }
+
+        async function fetchChannelVideos(channel) {
+            if (!channel.uploadsPlaylistId && channel.id && channel.id.startsWith('UC')) {
+                channel.uploadsPlaylistId = 'UU' + channel.id.slice(2);
+            }
+            try {
+                const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${channel.uploadsPlaylistId}&maxResults=20&key=${config.youtubeApiKey}`);
+                if (!res.ok) return [];
+                const data = await res.json();
+                return (data.items || []).map(item => ({
+                    id: item.snippet.resourceId.videoId,
+                    title: item.snippet.title,
+                    thumbnail: `https://i.ytimg.com/vi/${item.snippet.resourceId.videoId}/hqdefault.jpg`,
+                    publishedAt: item.snippet.publishedAt,
+                    channelId: channel.id,
+                    channelName: channel.name,
+                    channelThumb: channel.thumbnail,
+                    playlistId: channel.uploadsPlaylistId
+                })).filter(v => v.id && v.title !== 'Private video' && v.title !== 'Deleted video');
+            } catch(e) { return []; }
+        }
+
+        function buildFilterChips() {
+            const bar = document.getElementById('yt-filter-bar');
+            bar.innerHTML = '';
+            const allChip = document.createElement('div');
+            allChip.className = 'yt-chip' + (activeFilter === 'all' ? ' active' : '');
+            allChip.setAttribute('data-channel', 'all');
+            allChip.textContent = 'All';
+            allChip.addEventListener('click', () => loadFeed('all'));
+            bar.appendChild(allChip);
+            (config.youtubeChannels || []).forEach(ch => {
+                const chip = document.createElement('div');
+                chip.className = 'yt-chip' + (activeFilter === ch.id ? ' active' : '');
+                chip.setAttribute('data-channel', ch.id);
+                chip.textContent = ch.name;
+                chip.addEventListener('click', () => loadFeed(ch.id));
+                bar.appendChild(chip);
+            });
+        }
+
+        function updateChips() {
+            document.querySelectorAll('.yt-chip').forEach(c => {
+                c.classList.toggle('active', c.getAttribute('data-channel') === activeFilter);
+            });
+        }
+
+        function renderFeed() {
+            const grid = document.getElementById('yt-feed-grid');
+            const videos = activeFilter === 'all' ? allFeedVideos : allFeedVideos.filter(v => v.channelId === activeFilter);
+            if (videos.length === 0) {
+                grid.innerHTML = '<p style="padding:2rem;color:var(--text-secondary);">No videos found.</p>';
+                return;
+            }
             grid.innerHTML = '';
-            config.youtubeChannels.forEach(ch => {
+            videos.forEach(video => {
                 const tile = document.createElement('div');
-                tile.className = 'app-tile';
-                const imgHtml = ch.thumbnail
-                    ? `<img src="${ch.thumbnail}" style="width:80px;height:80px;border-radius:50%;object-fit:cover;" alt="">`
-                    : '📺';
-                tile.innerHTML = `<div class="app-icon">${imgHtml}</div><div class="app-name">${ch.name}</div>`;
-                tile.addEventListener('click', () => loadChannelVideos(ch));
+                tile.className = 'yt-video-tile';
+                const iconHtml = video.channelThumb ? `<img src="${video.channelThumb}" alt="">` : video.channelName.charAt(0).toUpperCase();
+                tile.innerHTML = `
+                    <div class="yt-thumb-wrap"><img src="${video.thumbnail}" alt="" loading="lazy"></div>
+                    <div class="yt-meta">
+                        <div class="yt-channel-icon">${iconHtml}</div>
+                        <div class="yt-text">
+                            <div class="yt-title">${video.title}</div>
+                            <div class="yt-channel-name">${video.channelName}</div>
+                        </div>
+                    </div>`;
+                tile.addEventListener('click', () => playYtVideo(video.id, video.playlistId));
                 grid.appendChild(tile);
             });
+            updateChips();
         }
 
         async function checkEmbeddable(videoId) {
@@ -689,102 +833,29 @@
             }
         }
 
-        async function loadChannelVideos(channel) {
-            currentYtChannel = channel;
-            document.getElementById('yt-channels-view').classList.add('hidden');
-            document.getElementById('yt-videos-view').classList.remove('hidden');
-            document.getElementById('yt-player-view').classList.add('hidden');
-            document.getElementById('yt-back-btn').classList.remove('hidden');
-            document.getElementById('yt-header-title').innerText = channel.name;
-            const grid = document.getElementById('yt-video-grid');
-            grid.innerHTML = '<p style="padding:2rem; color:#666;">Loading videos...</p>';
-
-            if (!channel.uploadsPlaylistId && channel.id && channel.id.startsWith('UC')) {
-                channel.uploadsPlaylistId = 'UU' + channel.id.slice(2);
-            }
-
-            const cacheKey = `yt_videos_${channel.id}`;
-            const cached = sessionStorage.getItem(cacheKey);
-            if (cached) { renderYtVideoGrid(JSON.parse(cached), channel.uploadsPlaylistId); return; }
-
-            try {
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${channel.uploadsPlaylistId}&maxResults=24&key=${config.youtubeApiKey}`);
-                if (!res.ok) throw new Error(res.status);
-                const data = await res.json();
-                const videos = (data.items || []).map(item => ({
-                    id: item.snippet.resourceId.videoId,
-                    title: item.snippet.title,
-                    thumbnail: `https://i.ytimg.com/vi/${item.snippet.resourceId.videoId}/hqdefault.jpg`
-                })).filter(v => v.id && v.title !== 'Private video' && v.title !== 'Deleted video');
-
-                grid.innerHTML = '<p style="padding:2rem; color:#666;">Checking videos...</p>';
-                const embeddable = await Promise.all(videos.map(v => checkEmbeddable(v.id)));
-                const playableVideos = videos.filter((_, i) => embeddable[i]);
-
-                sessionStorage.setItem(cacheKey, JSON.stringify(playableVideos));
-                renderYtVideoGrid(playableVideos, channel.uploadsPlaylistId);
-            } catch (e) {
-                grid.innerHTML = '<p style="padding:2rem; color:#c0392b;">Failed to load videos. Check the API key in Parent Settings.</p>';
-            }
-        }
-
-        function renderYtVideoGrid(videos, playlistId) {
-            const grid = document.getElementById('yt-video-grid');
-            grid.innerHTML = '';
-            if (videos.length === 0) {
-                grid.innerHTML = '<p style="padding:2rem; color:#666;">No videos found.</p>';
-                return;
-            }
-            const channelName = currentYtChannel ? currentYtChannel.name : '';
-            const channelThumb = currentYtChannel ? currentYtChannel.thumbnail : '';
-            const channelInitial = channelName.charAt(0).toUpperCase();
-            const iconHtml = channelThumb
-                ? `<img src="${channelThumb}" alt="">`
-                : channelInitial;
-
-            videos.forEach(video => {
-                const tile = document.createElement('div');
-                tile.className = 'yt-video-tile';
-                tile.innerHTML = `
-                    <div class="yt-thumb-wrap">
-                        <img src="${video.thumbnail}" alt="" loading="lazy">
-                    </div>
-                    <div class="yt-meta">
-                        <div class="yt-channel-icon">${iconHtml}</div>
-                        <div class="yt-text">
-                            <div class="yt-title">${video.title}</div>
-                            <div class="yt-channel-name">${channelName}</div>
-                        </div>
-                    </div>`;
-                tile.addEventListener('click', () => playYtVideo(video.id, playlistId));
-                grid.appendChild(tile);
-            });
-        }
-
         function playYtVideo(videoId, playlistId) {
-            document.getElementById('yt-videos-view').classList.add('hidden');
+            document.getElementById('yt-feed-view').classList.add('hidden');
             document.getElementById('yt-player-view').classList.remove('hidden');
-            document.getElementById('yt-header-title').innerText = 'Now Playing';
             document.getElementById('yt-player-error').classList.add('hidden');
             document.getElementById('yt-frame').classList.remove('hidden');
+            const unmuteBtn = document.getElementById('yt-unmute-btn');
+            unmuteBtn.textContent = '🔇 Tap to Unmute';
+            unmuteBtn.className = 'yt-unmute-btn muted';
             const listParam = playlistId ? `&list=${playlistId}` : '';
             const origin = encodeURIComponent(window.location.origin);
-            document.getElementById('yt-frame').src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&playsinline=1&iv_load_policy=3&controls=1&enablejsapi=1&origin=${origin}${listParam}`;
+            const baseUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1&iv_load_policy=3&controls=1&enablejsapi=1&origin=${origin}${listParam}`;
+            document.getElementById('yt-frame').src = baseUrl + '&mute=1';
+            unmuteBtn.onclick = () => {
+                document.getElementById('yt-frame').src = baseUrl;
+                unmuteBtn.textContent = '🔊 Playing';
+                unmuteBtn.className = 'yt-unmute-btn unmuted';
+            };
         }
 
         function closeYoutubePlayer() {
             document.getElementById('yt-frame').src = '';
             document.getElementById('yt-container').classList.add('hidden');
             elChildView.classList.remove('hidden');
-            currentYtChannel = null;
-            // Show child view with appropriate state
-            if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
-                document.getElementById('child-no-api').classList.add('hidden');
-                // Re-open YouTube picker immediately
-                openYoutubePlayer();
-            } else {
-                document.getElementById('child-no-api').classList.remove('hidden');
-            }
         }
 
         function renderYtChannelConfigList() {
@@ -1001,6 +1072,9 @@
             loadSession();
             updateFade();
             updateClocks();
+
+            allFeedVideos = [];
+            localStorage.removeItem('yt_feed_cache');
         }
 
         // --- QR Backup & Restore ---
@@ -1103,22 +1177,25 @@
             elParentTrigger.addEventListener('touchstart', () => { pressTimer = window.setTimeout(triggerParentPanel, 1500); });
             elParentTrigger.addEventListener('touchend', () => { clearTimeout(pressTimer); });
 
-            document.getElementById('yt-back-btn').addEventListener('click', () => {
-                const playerView = document.getElementById('yt-player-view');
-                const videosView = document.getElementById('yt-videos-view');
-                if (!playerView.classList.contains('hidden')) {
-                    document.getElementById('yt-frame').src = '';
-                    playerView.classList.add('hidden');
-                    videosView.classList.remove('hidden');
-                    document.getElementById('yt-header-title').innerText = currentYtChannel?.name || '';
-                } else if (!videosView.classList.contains('hidden')) {
-                    videosView.classList.add('hidden');
-                    document.getElementById('yt-channels-view').classList.remove('hidden');
-                    document.getElementById('yt-header-title').innerText = 'Choose a Channel';
-                } else {
-                    closeYoutubePlayer();
-                }
+            // Player back button
+            document.getElementById('yt-player-back-btn').addEventListener('click', () => {
+                document.getElementById('yt-frame').src = '';
+                document.getElementById('yt-player-view').classList.add('hidden');
+                document.getElementById('yt-feed-view').classList.remove('hidden');
             });
+
+            // Lock button in YT header
+            document.getElementById('yt-lock-btn').addEventListener('click', triggerParentPanel);
+
+            // Refresh button in YT header
+            document.getElementById('yt-refresh-btn').addEventListener('click', () => {
+                allFeedVideos = [];
+                localStorage.removeItem('yt_feed_cache');
+                loadFeed();
+            });
+
+            // Child view lock button
+            document.getElementById('child-lock-btn').addEventListener('click', triggerParentPanel);
 
             document.getElementById('btn-watch-yt').addEventListener('click', () => {
                 if (config.youtubeApiKey && config.youtubeChannels && config.youtubeChannels.length > 0) {
