@@ -11,7 +11,17 @@
             challengeHash: null,
             youtubeApiKey: '',
             hideShorts: true,
-            youtubeChannels: []
+            youtubeChannels: [
+                { id: 'UCSq2CP0vZ1VfsFiUX6kH7eQ', name: 'Ms. Rachel',         uploadsPlaylistId: 'UUSq2CP0vZ1VfsFiUX6kH7eQ' },
+                { id: 'UCLsooMJoIpl_7ux2jvdPB-Q', name: 'Super Simple Songs',  uploadsPlaylistId: 'UULsooMJoIpl_7ux2jvdPB-Q' },
+                { id: 'UCoookXUzPciGrEZEXmh4Jjg', name: 'Sesame Street',       uploadsPlaylistId: 'UUoookXUzPciGrEZEXmh4Jjg' },
+                { id: 'UCrNnk0wFBnCS1awGjq_ijGQ', name: 'PBS Kids',            uploadsPlaylistId: 'UUrNnk0wFBnCS1awGjq_ijGQ' },
+                { id: 'UC5uIZ2KOZZeQDQo_Gsi_qbQ', name: 'Cosmic Kids Yoga',   uploadsPlaylistId: 'UU5uIZ2KOZZeQDQo_Gsi_qbQ' },
+                { id: 'UCnBdzaRy-Ky9Vh54XJlFz1Q', name: 'Storyline Online',    uploadsPlaylistId: 'UUnBdzaRy-Ky9Vh54XJlFz1Q' },
+                { id: 'UC0SBo61kvjCpvgiHyL6yyxA', name: 'Boey Bear',           uploadsPlaylistId: 'UU0SBo61kvjCpvgiHyL6yyxA' },
+                { id: 'UCDqaC4dlA8Kxnr4ub9xsEZg', name: 'Franklin and Friends', uploadsPlaylistId: 'UUDqaC4dlA8Kxnr4ub9xsEZg' },
+                { id: 'UCF1cT4lrjaiGgWcUXUwD6EQ', name: 'Little Bear',         uploadsPlaylistId: 'UUF1cT4lrjaiGgWcUXUwD6EQ' }
+            ]
         };
 
         // Each proxy: [proxyUrl, encodeUrl]
