@@ -1130,6 +1130,10 @@
         function generateQR() {
             const safeConfig = JSON.parse(JSON.stringify(config));
             delete safeConfig.challengeHash;
+            // Strip thumbnails and uploadsPlaylistId — reduces payload size significantly
+            if (safeConfig.youtubeChannels) {
+                safeConfig.youtubeChannels = safeConfig.youtubeChannels.map(ch => ({ id: ch.id, name: ch.name }));
+            }
 
             const jsonStr = JSON.stringify(safeConfig);
             const b64 = btoa(unescape(encodeURIComponent(jsonStr)));
@@ -1138,16 +1142,19 @@
             container.innerHTML = '';
             container.classList.remove('hidden');
 
-            new QRCode(container, {
-                text: b64,
-                width: 256,
-                height: 256,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
-            document.getElementById('btn-print-qr').classList.remove('hidden');
+            try {
+                new QRCode(container, {
+                    text: b64,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.L
+                });
+                document.getElementById('btn-print-qr').classList.remove('hidden');
+            } catch(e) {
+                container.innerHTML = '<p style="color:var(--danger);padding:1rem;">Config too large for QR. Try removing some channels.</p>';
+            }
         }
 
         async function startScanner() {
