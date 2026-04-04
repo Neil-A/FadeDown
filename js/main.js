@@ -115,6 +115,14 @@
                 showSetupPanel(true);
             });
 
+            // Factory reset
+            document.getElementById('btn-factory-reset').addEventListener('click', () => {
+                if (!confirm('This will erase all settings, channels, and PIN. Are you sure?')) return;
+                localStorage.clear();
+                sessionStorage.clear();
+                window.location.reload();
+            });
+
             // Closers
             document.getElementById('close-challenge').addEventListener('click', hideOverlay);
             document.getElementById('close-panel').addEventListener('click', () => {
