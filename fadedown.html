@@ -90,10 +90,10 @@
         .iframe-header { display: flex; padding: 1rem 2rem; background: var(--bg-secondary); align-items: center; box-shadow: 0 1px 0 var(--border-color); z-index: 101; }
 
         /* Lock Screen */
-        #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 2rem; }
-        .lock-icon { font-size: 8rem; margin-bottom: 2rem; }
-        .lock-msg { font-size: 3rem; font-weight: 900; color: var(--text-color); margin-bottom: 1rem; }
-        .lock-sub { font-size: 1.8rem; color: var(--text-secondary); font-weight: 700; }
+        #lock-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 1.5rem; overflow-y: auto; gap: 0.6rem; }
+        .lock-icon { font-size: clamp(3.5rem, 15vw, 6rem); }
+        .lock-msg { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 900; color: var(--text-color); }
+        .lock-sub { font-size: clamp(1rem, 3.5vw, 1.4rem); color: var(--text-secondary); font-weight: 700; }
 
         /* Parent Trigger */
         #parent-trigger { position: absolute; top: 0; right: 0; width: 120px; height: 120px; z-index: 250; cursor: pointer; pointer-events: auto; }
@@ -269,10 +269,10 @@
             <div class="lock-icon" id="lock-icon">🌙</div>
             <div class="lock-msg" id="lock-msg">Screen time starts at 9am!</div>
             <div class="lock-sub" id="lock-sub">Time to rest your eyes.</div>
-            <div class="clock" id="lock-clock-display" style="margin-top: 2rem;">00:00</div>
-            <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.95rem; max-width: 320px;">Parent access: long-press top-right corner for 1.5s to unlock.</div>
-            <button id="unlock-btn" style="margin-top:1rem; padding:0.8rem 1.2rem; border:none; border-radius:10px; background:var(--accent); color:#fff; font-weight:700; cursor:pointer;">Unlock</button>
-            <a href="#" id="restore-link" style="margin-top: 1rem; color: var(--text-secondary); text-decoration: none; font-size: 0.9rem; z-index: 250; position: relative;">Restore Settings</a>
+            <div class="clock" id="lock-clock-display" style="font-size:clamp(1.8rem,8vw,3rem);">00:00</div>
+            <div style="color:var(--text-secondary);font-size:0.85rem;max-width:280px;">Long-press top-right corner for 1.5s to unlock.</div>
+            <button id="unlock-btn" style="padding:0.8rem 2rem;border:none;border-radius:10px;background:var(--accent);color:#fff;font-weight:700;cursor:pointer;font-size:1rem;">Unlock</button>
+            <a href="#" id="restore-link" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;z-index:250;position:relative;">Restore Settings</a>
         </div>
     </div>
 
