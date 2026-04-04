@@ -14,9 +14,11 @@
             youtubeChannels: []
         };
 
+        // Each proxy: [proxyUrl, encodeUrl]
         const CORS_PROXIES = [
-            'https://corsproxy.io/?',
-            'https://api.allorigins.win/raw?url='
+            ['https://api.allorigins.win/raw?url=', true],
+            ['https://api.codetabs.com/v1/proxy?quest=', false],
+            ['https://corsproxy.io/?', false],
         ];
 
         let config = null;

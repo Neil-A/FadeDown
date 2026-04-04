@@ -118,9 +118,9 @@
 
         async function fetchChannelRSS(channel) {
             const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${channel.id}`;
-            for (const proxy of CORS_PROXIES) {
+            for (const [proxyUrl, encode] of CORS_PROXIES) {
                 try {
-                    const res = await fetch(proxy + encodeURIComponent(rssUrl));
+                    const res = await fetch(proxyUrl + (encode ? encodeURIComponent(rssUrl) : rssUrl));
                     if (!res.ok) continue;
                     const doc = new DOMParser().parseFromString(await res.text(), 'text/xml');
                     const entries = Array.from(doc.querySelectorAll('entry'));
@@ -144,7 +144,7 @@
                         };
                     }).filter(v => v.id && v.title);
                 } catch(e) {
-                    console.warn('RSS fetch failed for', channel.id, 'via', proxy, e);
+                    console.warn('RSS fetch failed for', channel.id, 'via', proxyUrl, e);
                 }
             }
             return [];
