@@ -41,9 +41,14 @@
             const results = await Promise.all((config.youtubeChannels || []).map(ch => fetchChannelVideos(ch)));
             const merged = results.flat();
 
-            showSkeletons('Checking videos\u2026');
-            const embeddable = await Promise.all(merged.map(v => checkEmbeddable(v.id)));
-            let playable = merged.filter((_, i) => embeddable[i]);
+            let playable;
+            if (config.youtubeApiKey) {
+                showSkeletons('Checking videos\u2026');
+                const embeddable = await Promise.all(merged.map(v => checkEmbeddable(v.id)));
+                playable = merged.filter((_, i) => embeddable[i]);
+            } else {
+                playable = merged;
+            }
 
             if (config.hideShorts && config.youtubeApiKey) {
                 showSkeletons('Filtering Shorts\u2026');
@@ -121,10 +126,11 @@
             for (const [proxyUrl, encode] of CORS_PROXIES) {
                 try {
                     const res = await fetch(proxyUrl + (encode ? encodeURIComponent(rssUrl) : rssUrl));
-                    if (!res.ok) continue;
-                    const doc = new DOMParser().parseFromString(await res.text(), 'text/xml');
+                    if (!res.ok) { console.warn('RSS proxy returned', res.status, proxyUrl); continue; }
+                    const text = await res.text();
+                    const doc = new DOMParser().parseFromString(text, 'text/xml');
                     const entries = Array.from(doc.querySelectorAll('entry'));
-                    if (entries.length === 0) continue;
+                    if (entries.length === 0) { console.warn('RSS proxy returned no entries', proxyUrl, text.slice(0, 200)); continue; }
                     return entries.map(entry => {
                         // <id> contains "yt:video:VIDEO_ID" — safer than namespace querySelector
                         const idText = entry.querySelector('id')?.textContent || '';

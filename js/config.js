@@ -18,7 +18,7 @@
         const CORS_PROXIES = [
             ['https://api.allorigins.win/raw?url=', true],
             ['https://api.codetabs.com/v1/proxy?quest=', false],
-            ['https://corsproxy.io/?', false],
+            ['https://thingproxy.freeboard.io/fetch/', false],
         ];
 
         let config = null;
