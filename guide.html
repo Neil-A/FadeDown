@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Getting Started — FadeTube</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f1117;
+            --bg-card: #1a1d26;
+            --bg-highlight: #222638;
+            --border: #2e3247;
+            --text: #e8eaf0;
+            --text-muted: #8892a4;
+            --accent: #5b8af5;
+            --accent-soft: #1e2d4f;
+            --green: #3ecf8e;
+            --green-soft: #0d2e22;
+            --yellow: #f5c842;
+            --yellow-soft: #2e2710;
+            --radius: 14px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            font-size: 1rem;
+        }
+
+        /* ── Top nav ── */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(15,17,23,0.92);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.9rem 1.5rem;
+        }
+        .nav-logo { font-size: 1.1rem; font-weight: 900; color: var(--text); text-decoration: none; }
+        .nav-logo span { color: var(--accent); }
+        .nav-cta {
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 0.9rem;
+            border: none;
+            border-radius: 10px;
+            padding: 0.55rem 1.2rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .nav-cta:hover { opacity: 0.88; }
+
+        /* ── Page wrapper ── */
+        .page { max-width: 720px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+
+        /* ── Hero ── */
+        .hero { text-align: center; padding: 3rem 0 2.5rem; }
+        .hero-badge {
+            display: inline-block;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            margin-bottom: 1.2rem;
+        }
+        .hero h1 { font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 900; line-height: 1.2; margin-bottom: 1rem; }
+        .hero p { font-size: 1.1rem; color: var(--text-muted); max-width: 520px; margin: 0 auto 2rem; }
+        .hero-cta {
+            background: var(--accent);
+            color: #fff;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            border: none;
+            border-radius: var(--radius);
+            padding: 0.9rem 2rem;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .hero-cta:hover { opacity: 0.88; }
+
+        /* ── Section headings ── */
+        .section { margin-top: 3rem; }
+        .section-title {
+            font-size: 1.35rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* ── Cards ── */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0.9rem;
+        }
+        .card-title { font-weight: 800; font-size: 1rem; margin-bottom: 0.4rem; }
+        .card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* ── Philosophy pills ── */
+        .pillgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+        @media (max-width: 500px) { .pillgrid { grid-template-columns: 1fr; } }
+        .pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1rem 1.1rem;
+            font-size: 0.95rem;
+        }
+        .pill strong { display: block; font-weight: 800; margin-bottom: 0.25rem; }
+
+        /* ── Numbered steps ── */
+        .steps { display: flex; flex-direction: column; gap: 0.75rem; }
+        .step {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-start;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.1rem 1.25rem;
+        }
+        .step-num {
+            flex-shrink: 0;
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-weight: 900;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .step-body { flex: 1; }
+        .step-body strong { font-weight: 800; display: block; margin-bottom: 0.2rem; }
+        .step-body p { color: var(--text-muted); font-size: 0.93rem; }
+
+        /* ── Callout boxes ── */
+        .callout {
+            border-radius: var(--radius);
+            padding: 1rem 1.25rem;
+            margin-top: 1rem;
+            font-size: 0.93rem;
+            line-height: 1.55;
+        }
+        .callout-green { background: var(--green-soft); border: 1px solid #1a5c3a; color: #7dddb0; }
+        .callout-yellow { background: var(--yellow-soft); border: 1px solid #4a3d10; color: #d4aa30; }
+        .callout strong { font-weight: 800; display: block; margin-bottom: 0.25rem; }
+
+        /* ── Fade explainer ── */
+        .fade-bar-wrap { margin: 1rem 0; }
+        .fade-bar-label { display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .fade-bar {
+            height: 18px;
+            border-radius: 999px;
+            background: linear-gradient(to right, #5b8af5 0%, #5b8af5 67%, #a0a9c0 100%);
+            position: relative;
+        }
+        .fade-bar-tick {
+            position: absolute;
+            top: -4px;
+            bottom: -4px;
+            width: 2px;
+            background: var(--yellow);
+            border-radius: 2px;
+            left: 67%;
+        }
+
+        /* ── Challenge type list ── */
+        .challenge-list { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
+        .challenge-item {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            background: var(--bg-highlight);
+            border-radius: 10px;
+            padding: 0.7rem 1rem;
+            font-size: 0.93rem;
+        }
+        .challenge-icon { font-size: 1.3rem; flex-shrink: 0; }
+
+        /* ── Platform tabs ── */
+        .platform-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 0.75rem; }
+        @media (max-width: 480px) { .platform-grid { grid-template-columns: 1fr; } }
+        .platform-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.1rem;
+        }
+        .platform-card h4 { font-weight: 800; font-size: 0.95rem; margin-bottom: 0.6rem; }
+        .platform-card ol { padding-left: 1.2rem; color: var(--text-muted); font-size: 0.88rem; line-height: 1.9; }
+
+        /* ── Bottom CTA ── */
+        .bottom-cta {
+            margin-top: 3.5rem;
+            text-align: center;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 2.5rem 1.5rem;
+        }
+        .bottom-cta h2 { font-size: 1.6rem; font-weight: 900; margin-bottom: 0.75rem; }
+        .bottom-cta p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.97rem; }
+
+        /* ── Footer ── */
+        footer { text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 1.5rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+        footer a { color: var(--text-muted); text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+<nav class="nav">
+    <a href="app.html" class="nav-logo">&#9654; Fade<span>Tube</span></a>
+    <a href="app.html" class="nav-cta">Open App &#8594;</a>
+</nav>
+
+<div class="page">
+
+    <!-- Hero -->
+    <div class="hero">
+        <div class="hero-badge">Getting Started Guide</div>
+        <h1>Set up FadeTube<br>in under 5 minutes</h1>
+        <p>Everything a parent needs to know — from first launch to handing the tablet to your child.</p>
+        <a href="app.html" class="hero-cta">Open FadeTube &#8594;</a>
+    </div>
+
+    <!-- What is FadeTube -->
+    <div class="section">
+        <div class="section-title">What is FadeTube?</div>
+        <div class="card">
+            <div class="card-title">A calm, kid-safe YouTube experience with a built-in wind-down</div>
+            <p>FadeTube gives children access only to the YouTube channels you approve. As the session nears its end, the screen very gradually loses colour — invisibly in the moment, but perceptibly in retrospect — until the child naturally puts the device down.</p>
+        </div>
+
+        <div class="pillgrid" style="margin-top:0.9rem;">
+            <div class="pill">
+                <strong>Zero infrastructure</strong>
+                No server, no database, no account. Everything lives in your browser.
+            </div>
+            <div class="pill">
+                <strong>Zero data egress</strong>
+                Settings are stored locally on your device. Nothing is transmitted anywhere.
+            </div>
+            <div class="pill">
+                <strong>Free, forever</strong>
+                No subscriptions, no paywalls, no ads. One optional "Buy Me a Coffee" link.
+            </div>
+            <div class="pill">
+                <strong>Runs inside kiosk mode</strong>
+                Designed for iOS Guided Access or Android kiosk mode — no browser chrome visible.
+            </div>
+        </div>
+    </div>
+
+    <!-- How the fade engine works -->
+    <div class="section">
+        <div class="section-title">How the fade engine works</div>
+        <div class="card">
+            <div class="card-title">Imperceptible in real time, noticeable in retrospect</div>
+            <p>You set a session duration (e.g. 45 minutes) and a fade start time (e.g. 30 minutes). For the first 30 minutes the screen is full colour. Then it very slowly reduces saturation over the remaining 15 minutes — one step per minute using a 60-second CSS transition.</p>
+            <div class="fade-bar-wrap" style="margin-top:1rem;">
+                <div class="fade-bar-label">
+                    <span>Session start — full colour</span>
+                    <span>Fade begins</span>
+                    <span>Session end</span>
+                </div>
+                <div class="fade-bar"><div class="fade-bar-tick"></div></div>
+                <div class="fade-bar-label" style="margin-top:0.4rem;">
+                    <span>0 min</span>
+                    <span>30 min</span>
+                    <span>45 min</span>
+                </div>
+            </div>
+            <p style="margin-top:0.75rem;">When the session ends, a gentle end-of-session screen appears — no alarm, just a friendly message encouraging the child to rest their eyes.</p>
+        </div>
+    </div>
+
+    <!-- Step by step setup -->
+    <div class="section">
+        <div class="section-title">Step-by-step setup</div>
+        <div class="steps">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-body">
+                    <strong>Open FadeTube for the first time</strong>
+                    <p>Visit <strong>fadetube.com</strong> (or open the local file) in Safari on iOS or Chrome on Android. You'll see the welcome screen. Tap <em>Set up for your child</em>.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-body">
+                    <strong>Choose a parent challenge</strong>
+                    <p>Pick how you'll unlock the parent panel later. Options are a maths puzzle, a PIN, or a dot-grid pattern. The answer is hashed — it's never stored in plain text.</p>
+                    <div class="challenge-list">
+                        <div class="challenge-item"><span class="challenge-icon">&#129518;</span> <span><strong>Maths puzzle</strong> — a random arithmetic question each time</span></div>
+                        <div class="challenge-item"><span class="challenge-icon">&#128290;</span> <span><strong>PIN</strong> — 4–6 digit numeric code</span></div>
+                        <div class="challenge-item"><span class="challenge-icon">&#9726;</span> <span><strong>Pattern</strong> — connect dots on a 3×3 grid</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-body">
+                    <strong>Set session duration and fade timing</strong>
+                    <p>Choose how long a session lasts and when the fade kicks in. Defaults are a good starting point: 45-minute session, fade starts at 30 minutes, minimum saturation 20%.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">4</div>
+                <div class="step-body">
+                    <strong>Set the schedule</strong>
+                    <p>Choose which days and hours screen time is allowed. Outside those hours the child sees a friendly locked screen instead of the app grid.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">5</div>
+                <div class="step-body">
+                    <strong>Add your approved YouTube channels</strong>
+                    <p>In the parent panel under <em>App Configuration</em>, paste in a YouTube channel handle or playlist URL. Only those channels will appear in the child's grid.</p>
+                    <div class="callout callout-yellow" style="margin-top:0.75rem;">
+                        <strong>YouTube Premium tip</strong>
+                        FadeTube works best with YouTube Premium — it removes ads from embedded videos. Without it, pre-roll ads may appear inside the player.
+                    </div>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">6</div>
+                <div class="step-body">
+                    <strong>Enable kiosk mode on the device</strong>
+                    <p>This is the most important containment layer. It prevents the child from switching tabs, entering a URL, or pressing the home button.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-num">7</div>
+                <div class="step-body">
+                    <strong>Hand the device to your child</strong>
+                    <p>That's it. FadeTube runs itself. The session timer starts automatically when the child opens the app within the scheduled window.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kiosk mode instructions -->
+    <div class="section">
+        <div class="section-title">Enabling kiosk mode</div>
+        <p style="color:var(--text-muted); margin-bottom:0.75rem; font-size:0.95rem;">Kiosk mode prevents children from leaving the browser. Set it up before handing over the device.</p>
+        <div class="platform-grid">
+            <div class="platform-card">
+                <h4>&#63743; iOS — Guided Access</h4>
+                <ol>
+                    <li>Settings &rarr; Accessibility &rarr; Guided Access</li>
+                    <li>Turn Guided Access <strong>on</strong></li>
+                    <li>Set a Guided Access passcode</li>
+                    <li>Open FadeTube in Safari</li>
+                    <li>Triple-click the side button</li>
+                    <li>Tap <strong>Start</strong></li>
+                </ol>
+            </div>
+            <div class="platform-card">
+                <h4>&#129504; Android — Kiosk / Pin Screen</h4>
+                <ol>
+                    <li>Settings &rarr; Security &rarr; Screen Pinning</li>
+                    <li>Turn Screen Pinning <strong>on</strong></li>
+                    <li>Open FadeTube in Chrome</li>
+                    <li>Open Recents, tap the app icon</li>
+                    <li>Tap <strong>Pin this app</strong></li>
+                </ol>
+            </div>
+        </div>
+        <div class="callout callout-green" style="margin-top:0.75rem;">
+            <strong>Note on security scope</strong>
+            FadeTube is designed for young children (under ~10) in a supervised environment. A determined older child with DevTools access can clear localStorage — that's accepted and documented. The QR backup below is the recovery path.
+        </div>
+    </div>
+
+    <!-- Parent panel -->
+    <div class="section">
+        <div class="section-title">Accessing the parent panel</div>
+        <div class="card">
+            <div class="card-title">Long-press the clock or tap the lock icon</div>
+            <p>A challenge overlay appears before any settings are shown. After 3 wrong attempts there's a 60-second cooldown to prevent brute-force by a child watching over your shoulder.</p>
+        </div>
+        <div class="card" style="margin-top:0.75rem;">
+            <div class="card-title">What you can do in the parent panel</div>
+            <p>Add 15 minutes to the current session &nbsp;·&nbsp; End the session early &nbsp;·&nbsp; Reset to full colour &nbsp;·&nbsp; Add or remove channels &nbsp;·&nbsp; Change session duration and fade settings &nbsp;·&nbsp; Change the schedule &nbsp;·&nbsp; Change your challenge type or answer &nbsp;·&nbsp; Back up and restore settings via QR code</p>
+        </div>
+        <div class="callout callout-green" style="margin-top:0.75rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
+            <div>
+                <strong>Found a bug or have feedback?</strong>
+                Report issues and suggest improvements on GitHub — the quickest way to get help or share ideas.
+            </div>
+            <a href="https://github.com/Neil-A/FadeDown/issues" target="_blank" rel="noopener" style="flex-shrink:0; background:#1a5c3a; color:#7dddb0; font-weight:800; font-size:0.9rem; padding:0.55rem 1.1rem; border-radius:10px; text-decoration:none; border:1px solid #2a8a5a; white-space:nowrap;">Open an issue &#8599;</a>
+        </div>
+    </div>
+
+    <!-- Backup and restore -->
+    <div class="section">
+        <div class="section-title">Backup &amp; restore (no cloud needed)</div>
+        <div class="card">
+            <div class="card-title">Print a QR code — your offline backup</div>
+            <p>In the parent panel under <em>Backup &amp; Restore</em>, tap <strong>Generate Backup QR</strong>. Screenshot or print the QR. If the browser is ever cleared — after an update, privacy wipe, or new device — scan the QR to restore all your settings instantly.</p>
+        </div>
+        <div class="callout callout-yellow">
+            <strong>Important</strong>
+            The QR backup does not include your challenge answer (PIN / pattern / maths hash). You'll be asked to re-enter it fresh after scanning. Keep your answer somewhere safe.
+        </div>
+    </div>
+
+    <!-- About / philosophy -->
+    <div class="section">
+        <div class="section-title">Philosophy</div>
+        <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.7;">FadeTube runs entirely on your device. There are no servers, no user accounts, no analytics, and no data transmitted anywhere. All settings live in <code style="background:var(--bg-highlight);padding:0.1em 0.4em;border-radius:5px;font-size:0.9em;">localStorage</code>. Session state lives in <code style="background:var(--bg-highlight);padding:0.1em 0.4em;border-radius:5px;font-size:0.9em;">sessionStorage</code> and resets naturally when the tab is closed. The only external requests are Google Fonts on load and YouTube's embed player when a child opens a channel.</p>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="bottom-cta">
+        <h2>Ready to get started?</h2>
+        <p>Open FadeTube and follow the in-app setup wizard. It takes under 5 minutes.</p>
+        <a href="app.html" class="hero-cta">Open FadeTube &#8594;</a>
+    </div>
+
+</div>
+
+<footer>
+    <a href="app.html">&#8592; Back to FadeTube</a>
+    &nbsp;&middot;&nbsp;
+    <a href="https://github.com/Neil-A/FadeDown" target="_blank" rel="noopener">GitHub</a>
+    &nbsp;&middot;&nbsp; Free &middot; No account &middot; No tracking
+</footer>
+
+</body>
+</html>
