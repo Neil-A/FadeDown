@@ -9,6 +9,7 @@
         let elChallengeGate;
         let elSetupPanel;
         let elParentPanel;
+        let elWelcomePage;
         let elParentTrigger;
 
         // Load & Initialize
@@ -23,6 +24,7 @@
             elChallengeGate = document.getElementById('challenge-gate');
             elSetupPanel = document.getElementById('setup-panel');
             elParentPanel = document.getElementById('parent-panel');
+            elWelcomePage = document.getElementById('welcome-page');
         }
 
         async function init() {
@@ -35,12 +37,11 @@
 
             setupEventListeners();
 
-            // After loops started, open YouTube; or trigger setup on first run (?setup=1)
-            if (location.search.indexOf('setup=1') !== -1) {
-                history.replaceState(null, '', location.pathname);
-                showSetupPanel(false);
-            } else if (config.youtubeChannels && config.youtubeChannels.length > 0) {
+            // After loops started, open YouTube if configured; otherwise show welcome page
+            if (config.youtubeChannels && config.youtubeChannels.length > 0) {
                 openYoutubePlayer();
+            } else {
+                elWelcomePage.classList.remove('hidden');
             }
         }
 
@@ -75,6 +76,7 @@
 
             // Child view lock button
             document.getElementById('child-lock-btn').addEventListener('click', triggerParentPanel);
+            document.getElementById('btn-get-started').addEventListener('click', triggerParentPanel);
 
             document.getElementById('btn-watch-yt').addEventListener('click', () => {
                 if (config.youtubeChannels && config.youtubeChannels.length > 0) {
