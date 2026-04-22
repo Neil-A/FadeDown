@@ -194,7 +194,8 @@
             border-bottom: 1px solid var(--border-color);
             flex-shrink: 0;
         }
-        .yt-logo { font-size: 1.3rem; font-weight: 900; color: var(--accent); letter-spacing: -0.02em; }
+        .yt-logo { font-size: 1.3rem; font-weight: 900; color: var(--text-color); letter-spacing: -0.02em; }
+        .yt-logo span { color: var(--accent); }
         .yt-topbar-right { display: flex; gap: 0.5rem; align-items: center; }
         .yt-icon-btn { background: none; border: none; color: var(--text-color); font-size: 1.4rem; padding: 0.5rem; border-radius: 50%; cursor: pointer; line-height: 1; transition: background 0.15s; font-family: var(--font-main); font-weight: 800; }
         .yt-icon-btn:active { background: var(--bg-tertiary); }
@@ -204,8 +205,8 @@
         .yt-chip.active { background: var(--text-color); color: var(--bg-color); border-color: var(--text-color); }
 
         /* Feed */
-        .yt-feed { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; max-width: 600px; width: 100%; margin: 0 auto; }
-        #yt-feed-grid { display: flex; flex-direction: column; }
+        .yt-feed { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+        #yt-feed-grid { display: flex; flex-direction: column; max-width: 600px; margin: 0 auto; }
 
         /* Skeleton loading cards */
         .yt-skeleton { border-bottom: 1px solid var(--border-color); }
