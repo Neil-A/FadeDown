@@ -182,7 +182,7 @@
         .app-list-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border: 2px solid var(--border-color); border-radius: 12px; margin-bottom: 0.8rem; background: var(--bg-tertiary); }
 
         /* YouTube Container */
-        #yt-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 100; display: flex; flex-direction: column; }
+        #yt-container { position: fixed; top: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 600px; height: 100%; background: var(--bg-color); z-index: 100; display: flex; flex-direction: column; }
 
         /* YouTube Top Bar */
         .yt-topbar {
