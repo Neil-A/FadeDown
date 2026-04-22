@@ -1,2 +1,5 @@
 name = "fadetube"
-pages_build_output_dir = "."
+compatibility_date = "2025-04-01"
+
+[assets]
+directory = "."
