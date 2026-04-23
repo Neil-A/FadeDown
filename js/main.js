@@ -28,6 +28,10 @@
         }
 
         async function init() {
+            if (!localStorage.getItem('fadetube_config')) {
+                window.location.href = '/guide';
+                return;
+            }
             bindElements();
             loadConfig();
             loadSession();
